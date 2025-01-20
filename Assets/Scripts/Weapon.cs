@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class Weapon : MonoBehaviour
+public class Weapon : NetworkedMonoBehaviour
 {
     [Header("Bubble")]
     public GameObject bubblePrefab;
@@ -16,6 +17,7 @@ public class Weapon : MonoBehaviour
     private float chargeTime = 0f;
     private bool isCharging = false;
     private GameObject chargingBubble;
+    private GameObject firedBubble;
 
     [Header("Bubble Gauge")]
     public float maxGauge = 100f;
@@ -32,13 +34,21 @@ public class Weapon : MonoBehaviour
     [Header("Camera")]
     public Camera playerCamera;
 
-    void Start()
+    // Networked Resources for bubble
+    private bool networkedIsCharging;
+    private Vector3 networkedBubblePosition;
+    private Vector3 networkedBubbleScale;
+    private Vector3 networkedFiredBubblePosition;
+    private Vector3 networkedFiredBubbleScale;
+    
+
+    protected override void StartLocal()
     {
         currentGauge = maxGauge;
         currentGaugeRechargeRate = gaugeRechargeRate;
     }
 
-    void Update()
+    protected override void UpdateLocal()
     {
         // set weapon position and rotation to follow camera
         transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.5f + playerCamera.transform.right * 0.5f + playerCamera.transform.up * -0.25f;
@@ -99,6 +109,66 @@ public class Weapon : MonoBehaviour
         bubbleGauge.SetGauge(currentGauge);
     }
 
+    protected override void UpdateRemote()
+    {
+        if (networkedIsCharging && chargingBubble == null)
+        {
+            chargingBubble = Instantiate(bubblePrefab, networkedBubblePosition, Quaternion.identity);
+        }
+
+        if (chargingBubble != null)
+        {
+            // Interpolate position from network
+            chargingBubble.transform.position = Vector3.Lerp(chargingBubble.transform.position, networkedBubblePosition, Time.deltaTime * 10);
+            chargingBubble.transform.localScale = Vector3.Lerp(chargingBubble.transform.localScale, networkedBubbleScale, Time.deltaTime * 10);
+        }
+    }
+
+    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    {
+        // Charging bubble
+        stream.SendNext(isCharging);
+        if (chargingBubble != null)
+        {
+            stream.SendNext(chargingBubble.transform.position);
+            stream.SendNext(chargingBubble.transform.localScale);
+        }
+        else
+        {
+            stream.SendNext(Vector3.zero);
+            stream.SendNext(Vector3.zero);
+        }
+
+        // Fired bubble
+        if (firedBubble != null)
+        {
+            stream.SendNext(firedBubble.transform.position);
+            stream.SendNext(firedBubble.transform.localScale);
+        }
+        else
+        {
+            stream.SendNext(Vector3.zero);
+            stream.SendNext(Vector3.zero);
+        }
+    }
+
+    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    {
+        // Charging bubble
+        networkedIsCharging = (bool)stream.ReceiveNext();
+        networkedBubblePosition = (Vector3)stream.ReceiveNext();
+        networkedBubbleScale = (Vector3)stream.ReceiveNext();
+
+        // Fired bubble
+        networkedFiredBubblePosition = (Vector3)stream.ReceiveNext();
+        networkedFiredBubbleScale = (Vector3)stream.ReceiveNext();
+
+        // Compensate for lag
+        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+        networkedBubblePosition += chargingBubble.transform.position * lag;
+        networkedFiredBubblePosition += firedBubble.transform.position * lag;
+    }
+
     private void StartCharging()
     {
         Debug.Log("chargin");
@@ -113,7 +183,7 @@ public class Weapon : MonoBehaviour
         {
             Destroy(chargingBubbleCollider);
         }
-        }
+    }
 
     private void Fire()
     {
@@ -123,8 +193,6 @@ public class Weapon : MonoBehaviour
         isCharging = false;
 
         float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
-
-        Vector3 spawnPosition = bubbleSpawn.position;
 
         // raycast from the camera to get the direction to shoot
         Camera mainCamera = Camera.main;
@@ -141,10 +209,10 @@ public class Weapon : MonoBehaviour
             targetPoint = ray.GetPoint(1000);
         }
 
-        Vector3 direction = (targetPoint - spawnPosition).normalized;
+        Vector3 direction = (targetPoint - bubbleSpawn.position).normalized;
         
         // fired bubble
-        GameObject firedBubble = Instantiate(bubblePrefab, spawnPosition, Quaternion.identity);
+        firedBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
         firedBubble.transform.localScale = new Vector3(scale, scale, scale);
 
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
@@ -163,6 +231,7 @@ public class Weapon : MonoBehaviour
         if (bubble)
         {
             Destroy(bubble);
+            bubble = null;
         }
     }
 }
