@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c2e40fa84d53ccd428f640eac126b1fb, type: 2}
+  - {fileID: 2100000, guid: 3016f18e1e49347f0b7934995feb23de, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,3 +153,4 @@ MonoBehaviour:
   bubbleMass: 0.1
   gravityScale: 0.1
   floatStrength: 0.5
+  bounceForce: 10
