@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,9 +14,12 @@ public class PlayerController : MonoBehaviour
     public float mouseSensitivity = 3.0f;
     public float maxLookAngle = 60.0f;
     public bool lockCursor = true;
+    public Sprite crosshairImage;
+    public Color crosshairColor = Color.white;
 
     private float yaw = 0.0f;
     private float pitch = 0.0f;
+    private Image crosshairObject;
 
     [Header("Player Movement")]
     public float walkSpeed = 5.0f;
@@ -36,6 +41,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         playerCamera.fieldOfView = fov;
+        crosshairObject = GetComponentInChildren<Image>();
     }
 
     void Start()
@@ -44,6 +50,9 @@ public class PlayerController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
+
+        crosshairObject.sprite = crosshairImage;
+        crosshairObject.color = crosshairColor;
     }
 
     void Update()

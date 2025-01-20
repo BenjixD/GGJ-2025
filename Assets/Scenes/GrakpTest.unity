@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 952889928}
   - component: {fileID: 952889927}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: CrosshairAndGauge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -798,7 +798,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1283818133}
-  m_Father: {fileID: 0}
+  - {fileID: 1090353528}
+  m_Father: {fileID: 2110878599}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -894,6 +895,81 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1090353527
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1090353528}
+  - component: {fileID: 1090353530}
+  - component: {fileID: 1090353529}
+  m_Layer: 5
+  m_Name: Crosshair
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1090353528
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090353527}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 952889930}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1090353529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090353527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 8c89ed5746a4faa48bb97701cc2f2e35, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1090353530
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090353527}
+  m_CullTransparentMesh: 1
 --- !u!1 &1121559894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,7 +1165,7 @@ GameObject:
   - component: {fileID: 1283818133}
   - component: {fileID: 1283818134}
   m_Layer: 5
-  m_Name: Bubble Gauge
+  m_Name: BubbleGauge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1793,6 +1869,11 @@ Transform:
   - {fileID: 612106507}
   m_Father: {fileID: 1386985427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2110878599 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4534531651771593323, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+  m_PrefabInstance: {fileID: 3249058143714686308}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3249058143714686308
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1916,6 +1997,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4534531651771593323, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 952889930}
     - targetCorrespondingSourceObject: {fileID: 8683448725339813896, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       insertIndex: -1
       addedObject: {fileID: 111341442}
@@ -1931,5 +2015,4 @@ SceneRoots:
   - {fileID: 1599357871}
   - {fileID: 3249058143714686308}
   - {fileID: 1386985427}
-  - {fileID: 952889930}
   - {fileID: 1316049422}

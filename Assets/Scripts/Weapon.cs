@@ -41,8 +41,8 @@ public class Weapon : MonoBehaviour
     void Update()
     {
         // set weapon position and rotation to follow camera
-        transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.5f + playerCamera.transform.right * 0.5f;
-        transform.rotation = playerCamera.transform.rotation;
+        transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.5f + playerCamera.transform.right * 0.5f + playerCamera.transform.up * -0.25f;
+        transform.rotation = playerCamera.transform.rotation * Quaternion.Euler(-10, -15, 0);
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -112,13 +112,39 @@ public class Weapon : MonoBehaviour
 
         isCharging = false;
         
-        // new fired bubble
-        GameObject firedBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
+        // fired bubble
+        // GameObject firedBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
+        // float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
+        // firedBubble.transform.localScale = new Vector3(scale, scale, scale);
+
+        // Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
+        // rb.AddForce(bubbleSpawn.forward.normalized * bubbleVelocity, ForceMode.VelocityChange);
+
+        // new fired bubble at crosshair
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+        Vector3 spawnPosition;
+        if (Physics.Raycast(ray, out hit))
+        {
+            spawnPosition = hit.point;
+        }
+        else
+        {
+            spawnPosition = ray.GetPoint(1000);
+        }
+
+        GameObject firedBubble = Instantiate(bubblePrefab, spawnPosition, Quaternion.identity);
         float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
         firedBubble.transform.localScale = new Vector3(scale, scale, scale);
 
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
-        rb.AddForce(bubbleSpawn.forward.normalized * bubbleVelocity, ForceMode.VelocityChange);
+        rb.AddForce(ray.direction * bubbleVelocity, ForceMode.VelocityChange);
+
+        Collider bubbleCollider = firedBubble.GetComponent<Collider>();
+        Collider playerCollider = GetComponent<Collider>();
+        Physics.IgnoreCollision(bubbleCollider, playerCollider, true);
+        StartCoroutine(ReenableCollision(bubbleCollider, playerCollider, 0.1f));
+
         StartCoroutine(DestroybubbleAfterTime(firedBubble, bubblePrefabLifetime));
 
         // destroy charging bubble
@@ -134,6 +160,12 @@ public class Weapon : MonoBehaviour
             Destroy(bubble);
         }
     }
+
+    private IEnumerator ReenableCollision(Collider bubbleCollider, Collider playerCollider, float delay)
+{
+    yield return new WaitForSeconds(delay);
+    Physics.IgnoreCollision(bubbleCollider, playerCollider, false);
+}
 
 
 }
