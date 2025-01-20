@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6283670868234479844}
   - component: {fileID: 6774281677880400332}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,7 +96,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7167324358054667131}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: adbfa6d46034f4e80a588fa3931c5e74, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -149,3 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4577a3b1a5854675854adcbedf9e7cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bubbleDrag: 1
+  bubbleMass: 0.1
+  gravityScale: 0.1
+  floatStrength: 0.5

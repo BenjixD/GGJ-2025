@@ -237,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 111341442}
   m_Layer: 0
-  m_Name: BulletSpawn
+  m_Name: BubbleSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -252,7 +252,7 @@ Transform:
   m_GameObject: {fileID: 111341441}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1299,10 +1299,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerController
       objectReference: {fileID: 0}
+    - target: {fileID: 1791248154453901722, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: bubbleSpawn
+      value: 
+      objectReference: {fileID: 111341442}
     - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       propertyPath: bulletSpawn
       value: 
       objectReference: {fileID: 111341442}
+    - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: bubblePrefab
+      value: 
+      objectReference: {fileID: 7167324358054667131, guid: 538e5ccb3ced84c8bb5cae3d43d7af0b, type: 3}
     - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       propertyPath: bulletPrefab
       value: 
@@ -1311,6 +1323,18 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 304607575}
+    - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: bubbleVelocity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: bulletVelocity
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: bubblePrefabLifetime
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2596853779075300912, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1350,6 +1374,18 @@ PrefabInstance:
     - target: {fileID: 2596853779075300912, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3858794587967341392, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: jumpPower
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3858794587967341392, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: maxLookAngle
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 3858794587967341392, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
+      propertyPath: mouseSensitivity
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8683448725339813896, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       propertyPath: m_LocalPosition.y

@@ -4,11 +4,11 @@ using System.Collections;
 
 public class Weapon : MonoBehaviour
 {
-    [Header("Bullet")]
-    public GameObject bulletPrefab;
-    public Transform bulletSpawn;
-    public float bulletVelocity = 10.0f;
-    public float bulletPrefabLifetime = 5.0f;
+    [Header("Bubble")]
+    public GameObject bubblePrefab;
+    public Transform bubbleSpawn;
+    public float bubbleVelocity = 2.0f;
+    public float bubblePrefabLifetime = 5.0f;
 
     [Header("Camera")]
     public Camera playerCamera;
@@ -28,15 +28,15 @@ public class Weapon : MonoBehaviour
 
     private void Fire()
     {
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.AddForce(bulletSpawn.forward.normalized * bulletVelocity, ForceMode.VelocityChange);
-        StartCoroutine(DestroyBulletAfterTime(bullet, bulletPrefabLifetime));
+        GameObject bubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
+        Rigidbody rb = bubble.GetComponent<Rigidbody>();
+        rb.AddForce(bubbleSpawn.forward.normalized * bubbleVelocity, ForceMode.VelocityChange);
+        StartCoroutine(DestroybubbleAfterTime(bubble, bubblePrefabLifetime));
     }
 
-    private IEnumerator DestroyBulletAfterTime(GameObject bullet, float time)
+    private IEnumerator DestroybubbleAfterTime(GameObject bubble, float time)
     {
         yield return new WaitForSeconds(time);
-        Destroy(bullet);
+        Destroy(bubble);
     }
 }
