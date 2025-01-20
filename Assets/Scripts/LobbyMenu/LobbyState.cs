@@ -82,6 +82,15 @@ public class LobbyState : SingletonPunCallback<LobbyState>
         return this.roomId;
     }
 
+    public bool IsMasterClient() {
+        return PhotonNetwork.IsMasterClient;
+    }
+
+    public void StartGame() {
+        // TODO: Start the game
+        Debug.Log("start!");
+    }
+
     // Private methods
     private void StateChange(LobbyStateEnum newState) {
         this.state = newState;
