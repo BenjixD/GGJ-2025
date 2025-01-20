@@ -3,13 +3,12 @@ using UnityEngine;
 public class LobbyUIElement : MonoBehaviour
 {
     public LobbyStateEnum[] visibleStates;
-    public LobbyStateEnum nextState;
-    void Start()
+    protected virtual void Start()
     {
         LobbyState.Instance.Register(this);
     }
 
-    public void UpdateOnStateChanged(LobbyStateEnum newState)
+    public virtual void UpdateOnStateChanged(LobbyStateEnum newState)
     {
         foreach(LobbyStateEnum state in visibleStates) {
             if (state == newState) {
@@ -18,9 +17,5 @@ public class LobbyUIElement : MonoBehaviour
             }
         }
         gameObject.SetActive(false);
-    }
-
-    public void UpdateState() {
-        LobbyState.Instance.StateChange(nextState);
     }
 }
