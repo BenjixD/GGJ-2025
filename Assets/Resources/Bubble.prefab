@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5020146142319554344}
   - component: {fileID: 6283670868234479844}
   - component: {fileID: 6774281677880400332}
+  - component: {fileID: 414375327394830481}
   m_Layer: 0
   m_Name: Bubble
   m_TagString: Untagged
@@ -154,3 +155,26 @@ MonoBehaviour:
   gravityScale: 0.1
   floatStrength: 0.5
   bounceForce: 10
+--- !u!114 &414375327394830481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7167324358054667131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 6774281677880400332}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

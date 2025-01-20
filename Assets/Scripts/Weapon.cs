@@ -32,7 +32,7 @@ public class Weapon : NetworkedMonoBehaviour
 
     [Header("Camera")]
     public Camera playerCamera;
-    
+
     protected override void StartLocal()
     {
         currentGauge = maxGauge;
@@ -69,7 +69,7 @@ public class Weapon : NetworkedMonoBehaviour
             {
                 currentGauge -= gaugeDepletionRate * Time.deltaTime;
             }
-            
+
             if (currentGauge <= 0)
             {
                 // auto fire if empty
@@ -100,12 +100,12 @@ public class Weapon : NetworkedMonoBehaviour
         bubbleGauge.SetGauge(currentGauge);
     }
 
-    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
 
     }
 
-    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
 
     }
@@ -113,11 +113,11 @@ public class Weapon : NetworkedMonoBehaviour
     private void StartCharging()
     {
         // Debug.Log("chargin");
-        if (chargingBubble != null) return; 
+        if (chargingBubble != null) return;
 
         isCharging = true;
         chargeTime = 0f;
-        chargingBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
+        chargingBubble = PhotonNetwork.Instantiate(bubblePrefab.name, bubbleSpawn.position, Quaternion.identity);
 
         Collider chargingBubbleCollider = chargingBubble.GetComponent<Collider>();
         if (chargingBubbleCollider != null)
@@ -151,9 +151,9 @@ public class Weapon : NetworkedMonoBehaviour
         }
 
         Vector3 direction = (targetPoint - bubbleSpawn.position).normalized;
-        
+
         // fired bubble
-        GameObject firedBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
+        GameObject firedBubble = PhotonNetwork.Instantiate(bubblePrefab.name, bubbleSpawn.position, Quaternion.identity);
         firedBubble.transform.localScale = new Vector3(scale, scale, scale);
 
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
