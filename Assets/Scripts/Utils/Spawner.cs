@@ -7,7 +7,7 @@ public abstract class Spawner: MonoBehaviourPunCallbacks {
     public GameObject prefab;
     [Header("For Development")]
     public bool connectToNetworkOnStart = false;
-    public string roomName = "";
+    public string roomId = "";
 
     void Awake() {
         if (connectToNetworkOnStart && !PhotonNetwork.IsConnected) {
@@ -24,7 +24,7 @@ public abstract class Spawner: MonoBehaviourPunCallbacks {
         if(PhotonNetwork.InRoom) {
             return;
         }
-        PhotonNetwork.JoinOrCreateRoom(this.roomName, new RoomOptions(), TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom(this.roomId, new RoomOptions(), TypedLobby.Default);
     }
 
     private IEnumerator WaitThenSpawn() {
