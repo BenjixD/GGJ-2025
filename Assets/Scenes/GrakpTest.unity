@@ -1920,7 +1920,7 @@ PrefabInstance:
       objectReference: {fileID: 304607575}
     - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       propertyPath: bubbleVelocity
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2427568349988565462, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
       propertyPath: bulletVelocity
