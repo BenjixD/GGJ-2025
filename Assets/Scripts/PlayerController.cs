@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkedMonoBehaviour
 {
     private Rigidbody rb;
     private Vector2 moveInput;
@@ -37,14 +37,18 @@ public class PlayerController : MonoBehaviour
     public float jumpPower = 5f;
     private bool isGrounded = false;
 
+    // Networked Resources, used to sync player position and rotation
+    // for remote players
+    private Vector3 networkedPosition;
+    private Quaternion networkedRotation;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         playerCamera.fieldOfView = fov;
         crosshairObject = GetComponentInChildren<Image>();
     }
-
-    void Start()
+    protected override void StartLocal()
     {
         if(lockCursor)
         {
@@ -55,10 +59,44 @@ public class PlayerController : MonoBehaviour
         crosshairObject.color = crosshairColor;
     }
 
-    void Update()
+    protected override void UpdateLocal()
     {
-        // camera look around
+        UpdateCamera();
+    }
 
+    protected override void FixedUpdateLocal()
+    {
+        UpdateMovement();
+        CheckGround();
+    }
+
+    protected override void FixedUpdateRemote()
+    {
+        // Interpolate position and rotation from network
+        rb.position = Vector3.Lerp(rb.position, networkedPosition, Time.fixedDeltaTime * 10);
+        rb.rotation = Quaternion.Lerp(rb.rotation, networkedRotation, Time.fixedDeltaTime * 10);
+    }
+
+    // Player movement is updated using RBs and force locally
+    // We sync positions and rotations over the wire
+    // Note: Order of stream is important
+    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+        stream.SendNext(rb.position);
+        stream.SendNext(rb.rotation);
+    }
+
+    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+        networkedPosition = (Vector3)stream.ReceiveNext();
+        networkedRotation = (Quaternion)stream.ReceiveNext();
+
+        // Compensate for lag
+        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+        networkedPosition += rb.linearVelocity * lag;
+    }
+
+
+    private void UpdateCamera() {
+        // camera look around
         yaw = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;
         pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
 
@@ -76,28 +114,23 @@ public class PlayerController : MonoBehaviour
         {
             playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, fov, sprintFOVStepTime * Time.deltaTime);
         }
-
-        CheckGround();
-
     }
 
-    void FixedUpdate()
-    {
+    private void UpdateMovement() {
         Vector3 targetVelocity = new Vector3(moveInput.x, 0, moveInput.y);
-        
         // Sprint
         if (Input.GetKey(sprintKey)) // old input
         {
             targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
 
             Vector3 velocity = rb.linearVelocity;
-            Vector3 velocityChange = (targetVelocity - velocity);    
+            Vector3 velocityChange = (targetVelocity - velocity);
 
             velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
             velocityChange.y = 0;
             velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
-            
+
             if (velocityChange.x != 0 || velocityChange.z != 0)
             {
                 isSprinting = true;
