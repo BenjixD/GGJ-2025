@@ -11,6 +11,14 @@ public class Bubble : MonoBehaviour
     public float gravityScale = 0.1f;
     public float floatStrength = 1.0f;
     public float bounceForce = 10.0f; 
+
+    void Awake()
+    {
+        bubbleCollider = GetComponent<Collider>();
+        bubbleCollider.enabled = false;
+        StartCoroutine(EnableColliderAfterDelay(0.1f));
+    }
+    
     
     void Start()
     {
@@ -59,10 +67,28 @@ public class Bubble : MonoBehaviour
             StartCoroutine(DestroyBubbleAfterDelay());
         }
     }
+    
+    private void OnCollisionExit(Collision other)
+    {
+        // Enable the collider once it exits any collider
+        bubbleCollider.enabled = true;
+    }
 
     private IEnumerator DestroyBubbleAfterDelay()
     {
         yield return new WaitForSeconds(0.1f);
         Destroy(gameObject);
     }
+
+    private IEnumerator EnableColliderAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (bubbleCollider != null)
+        {
+            bubbleCollider.enabled = true;
+        }
+    }
+
 }
+
+

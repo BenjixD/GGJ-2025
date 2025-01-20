@@ -124,14 +124,31 @@ public class Weapon : MonoBehaviour
 
         float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
 
-        Vector3 spawnPosition = bubbleSpawn.position + bubbleSpawn.forward * (scale + 1f); // adjust maybe
+        Vector3 spawnPosition = bubbleSpawn.position;
+
+        // raycast from the camera to get the direction to shoot
+        Camera mainCamera = Camera.main;
+        Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+        RaycastHit hit;
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(1000);
+        }
+
+        Vector3 direction = (targetPoint - spawnPosition).normalized;
         
         // fired bubble
         GameObject firedBubble = Instantiate(bubblePrefab, spawnPosition, Quaternion.identity);
         firedBubble.transform.localScale = new Vector3(scale, scale, scale);
 
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
-        rb.AddForce(bubbleSpawn.forward.normalized * bubbleVelocity, ForceMode.VelocityChange);
+        rb.AddForce(direction * bubbleVelocity, ForceMode.VelocityChange);
 
         StartCoroutine(DestroybubbleAfterTime(firedBubble, bubblePrefabLifetime));
 
