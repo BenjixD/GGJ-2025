@@ -17,7 +17,6 @@ public class Weapon : NetworkedMonoBehaviour
     private float chargeTime = 0f;
     private bool isCharging = false;
     private GameObject chargingBubble;
-    private GameObject firedBubble;
 
     [Header("Bubble Gauge")]
     public float maxGauge = 100f;
@@ -154,7 +153,7 @@ public class Weapon : NetworkedMonoBehaviour
         Vector3 direction = (targetPoint - bubbleSpawn.position).normalized;
         
         // fired bubble
-        firedBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
+        GameObject firedBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
         firedBubble.transform.localScale = new Vector3(scale, scale, scale);
 
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
