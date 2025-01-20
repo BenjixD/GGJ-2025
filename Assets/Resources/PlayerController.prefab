@@ -152,6 +152,7 @@ GameObject:
   - component: {fileID: 7024825974813730215}
   - component: {fileID: 3858794587967341392}
   - component: {fileID: 3214304547823124573}
+  - component: {fileID: 7475614621742473356}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -296,6 +297,8 @@ MonoBehaviour:
   mouseSensitivity: 3
   maxLookAngle: 60
   lockCursor: 1
+  crosshairImage: {fileID: 0}
+  crosshairColor: {r: 1, g: 1, b: 1, a: 1}
   walkSpeed: 5
   maxVelocityChange: 10
   sprintSpeed: 10
@@ -333,6 +336,29 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &7475614621742473356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791248154453901722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 3858794587967341392}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &6926114699186475394
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,7 +480,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f870ef92286d45eab3fe7c634010e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 0}
-  bulletSpawn: {fileID: 0}
-  bulletVelocity: 20
-  bulletPrefabLifetime: 5
+  bubblePrefab: {fileID: 0}
+  bubbleSpawn: {fileID: 0}
+  bubbleVelocity: 2
+  bubblePrefabLifetime: 5
+  maxChargeTime: 2
+  maxBubbleSize: 3
+  maxGauge: 100
+  gaugeDepletionRate: 20
+  gaugeRechargeRate: 10
+  emptyGaugeRechargeRate: 6
+  bubbleGauge: {fileID: 0}
+  gaugeFill: {fileID: 0}
+  playerCamera: {fileID: 0}
