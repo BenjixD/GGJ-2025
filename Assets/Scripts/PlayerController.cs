@@ -85,7 +85,7 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void FixedUpdateRemote()
     {
         // Interpolate position and rotation from network
-        rb.position = Vector3.Lerp(rb.position, networkedPosition, Time.fixedDeltaTime * 10);
+        // rb.position = Vector3.Lerp(rb.position, networkedPosition, Time.fixedDeltaTime * 10);
         rb.rotation = Quaternion.Lerp(rb.rotation, networkedRotation, Time.fixedDeltaTime * 10);
     }
 
@@ -104,6 +104,7 @@ public class PlayerController : NetworkedMonoBehaviour
         // Compensate for lag
         float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
         networkedPosition += rb.linearVelocity * lag;
+        rb.position = networkedPosition;
     }
 
 

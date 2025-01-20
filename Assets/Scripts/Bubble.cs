@@ -11,10 +11,9 @@ public class Bubble : NetworkedMonoBehaviour
     public float bubbleMass = 0.1f;
     public float gravityScale = 0.1f;
     public float floatStrength = 1.0f;
-    public float bounceForce = 10.0f; 
+    public float bounceForce = 10.0f;
 
     private Vector3 networkedPosition;
-    private Quaternion networkedRotation;
     private Vector3 networkedScale;
 
     void Awake()
@@ -24,8 +23,8 @@ public class Bubble : NetworkedMonoBehaviour
         StartCoroutine(EnableColliderAfterDelay(0.1f));
         rb = GetComponent<Rigidbody>();
     }
-    
-    
+
+
     protected override void StartLocal()
     {
         rb.useGravity = false;
@@ -50,26 +49,25 @@ public class Bubble : NetworkedMonoBehaviour
 
     protected override void FixedUpdateRemote()
     {
-        rb.position = Vector3.Lerp(transform.position, networkedPosition, Time.fixedDeltaTime * 10);
-        rb.rotation = Quaternion.Lerp(transform.rotation, networkedRotation, Time.fixedDeltaTime * 10);
+        // rb.position = Vector3.Lerp(transform.position, networkedPosition, Time.fixedDeltaTime * 10);
+        transform.localScale = Vector3.Lerp(transform.localScale, networkedScale, Time.fixedDeltaTime * 10);
     }
 
-    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         stream.SendNext(rb.transform.position);
-        stream.SendNext(rb.transform.rotation);
         stream.SendNext(transform.localScale);
     }
 
-    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         networkedPosition = (Vector3)stream.ReceiveNext();
-        networkedRotation = (Quaternion)stream.ReceiveNext();
         networkedScale = (Vector3)stream.ReceiveNext();
 
         // Compensate for lag
         float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
         networkedPosition += rb.linearVelocity * lag;
+        rb.position = networkedPosition;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -95,7 +93,7 @@ public class Bubble : NetworkedMonoBehaviour
             StartCoroutine(DestroyBubbleAfterDelay());
         }
     }
-    
+
     private void OnCollisionExit(Collision other)
     {
         // Enable the collider once it exits any collider
