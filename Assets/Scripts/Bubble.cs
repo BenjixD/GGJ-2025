@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using Photon.Pun;
 
-public class Bubble : MonoBehaviour
+public class Bubble : NetworkedMonoBehaviour
 {
     private Rigidbody rb;
     private Collider bubbleCollider;
@@ -12,6 +13,9 @@ public class Bubble : MonoBehaviour
     public float floatStrength = 1.0f;
     public float bounceForce = 10.0f; 
 
+    private Vector3 networkedPosition;
+    private Quaternion networkedRotation;
+
     void Awake()
     {
         bubbleCollider = GetComponent<Collider>();
@@ -20,7 +24,7 @@ public class Bubble : MonoBehaviour
     }
     
     
-    void Start()
+    protected override void StartLocal()
     {
         rb = GetComponent<Rigidbody>();
 
@@ -29,7 +33,7 @@ public class Bubble : MonoBehaviour
         rb.mass = bubbleMass;
     }
 
-    void FixedUpdate()
+    protected override void FixedUpdateLocal()
     {
         // gravity
         rb.AddForce(Vector3.down * gravityScale, ForceMode.Acceleration);
@@ -42,6 +46,28 @@ public class Bubble : MonoBehaviour
         ) * floatStrength;
 
         rb.AddForce(randomFloat, ForceMode.Acceleration);
+    }
+
+    protected override void FixedUpdateRemote()
+    {
+        rb.position = Vector3.Lerp(transform.position, networkedPosition, Time.fixedDeltaTime * 10);
+        rb.rotation = Quaternion.Lerp(transform.rotation, networkedRotation, Time.fixedDeltaTime * 10);
+    }
+
+    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    {
+        stream.SendNext(rb.transform.position);
+        stream.SendNext(rb.transform.rotation);
+    }
+
+    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    {
+        networkedPosition = (Vector3)stream.ReceiveNext();
+        networkedRotation = (Quaternion)stream.ReceiveNext();
+
+        // Compensate for lag
+        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+        networkedPosition += rb.linearVelocity * lag;
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class Weapon : MonoBehaviour
+public class Weapon : NetworkedMonoBehaviour
 {
     [Header("Bubble")]
     public GameObject bubblePrefab;
@@ -31,14 +32,14 @@ public class Weapon : MonoBehaviour
 
     [Header("Camera")]
     public Camera playerCamera;
-
-    void Start()
+    
+    protected override void StartLocal()
     {
         currentGauge = maxGauge;
         currentGaugeRechargeRate = gaugeRechargeRate;
     }
 
-    void Update()
+    protected override void UpdateLocal()
     {
         // set weapon position and rotation to follow camera
         transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.5f + playerCamera.transform.right * 0.5f + playerCamera.transform.up * -0.25f;
@@ -99,9 +100,19 @@ public class Weapon : MonoBehaviour
         bubbleGauge.SetGauge(currentGauge);
     }
 
+    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    {
+
+    }
+
+    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) 
+    {
+
+    }
+
     private void StartCharging()
     {
-        Debug.Log("chargin");
+        // Debug.Log("chargin");
         if (chargingBubble != null) return; 
 
         isCharging = true;
@@ -113,18 +124,16 @@ public class Weapon : MonoBehaviour
         {
             Destroy(chargingBubbleCollider);
         }
-        }
+    }
 
     private void Fire()
     {
-        Debug.Log("fire!");
+        // Debug.Log("fire!");
         if (!isCharging || chargingBubble == null) return;
 
         isCharging = false;
 
         float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
-
-        Vector3 spawnPosition = bubbleSpawn.position;
 
         // raycast from the camera to get the direction to shoot
         Camera mainCamera = Camera.main;
@@ -141,10 +150,10 @@ public class Weapon : MonoBehaviour
             targetPoint = ray.GetPoint(1000);
         }
 
-        Vector3 direction = (targetPoint - spawnPosition).normalized;
+        Vector3 direction = (targetPoint - bubbleSpawn.position).normalized;
         
         // fired bubble
-        GameObject firedBubble = Instantiate(bubblePrefab, spawnPosition, Quaternion.identity);
+        GameObject firedBubble = Instantiate(bubblePrefab, bubbleSpawn.position, Quaternion.identity);
         firedBubble.transform.localScale = new Vector3(scale, scale, scale);
 
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
@@ -163,6 +172,7 @@ public class Weapon : MonoBehaviour
         if (bubble)
         {
             Destroy(bubble);
+            bubble = null;
         }
     }
 }
