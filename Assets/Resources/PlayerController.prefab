@@ -293,6 +293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0b3db5bdfa16471f92f7b4c243d6e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioListener: {fileID: 3518808122076393996}
   playerCamera: {fileID: 2703294815512918033}
   fov: 60
   mouseSensitivity: 5
