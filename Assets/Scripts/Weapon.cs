@@ -143,9 +143,11 @@ public class Weapon : NetworkedMonoBehaviour
         networkedBubblePosition = (Vector3)stream.ReceiveNext();
         networkedBubbleScale = (Vector3)stream.ReceiveNext();
 
-        // Compensate for lag
-        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
-        networkedBubblePosition += chargingBubble.transform.position * lag;
+        if(chargingBubble != null) {
+            // Compensate for lag
+            float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+            networkedBubblePosition += chargingBubble.transform.position * lag;
+        }
     }
 
     private void StartCharging()
