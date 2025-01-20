@@ -33,6 +33,11 @@ public class Weapon : NetworkedMonoBehaviour
     [Header("Camera")]
     public Camera playerCamera;
 
+    // Networked Resources for bubble
+    private bool networkedIsCharging;
+    private Vector3 networkedBubblePosition;
+    private Vector3 networkedBubbleScale;
+
     protected override void StartLocal()
     {
         currentGauge = maxGauge;
@@ -100,14 +105,47 @@ public class Weapon : NetworkedMonoBehaviour
         bubbleGauge.SetGauge(currentGauge);
     }
 
+    protected override void UpdateRemote()
+    {
+        if (networkedIsCharging && chargingBubble == null)
+        {
+            chargingBubble = Instantiate(bubblePrefab, networkedBubblePosition, Quaternion.identity);
+        }
+
+        if (chargingBubble != null)
+        {
+            // Interpolate position from network
+            chargingBubble.transform.position = Vector3.Lerp(chargingBubble.transform.position, networkedBubblePosition, Time.deltaTime * 10);
+            chargingBubble.transform.localScale = Vector3.Lerp(chargingBubble.transform.localScale, networkedBubbleScale, Time.deltaTime * 10);
+        }
+    }
+
     protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-
+        // Charging bubble
+        stream.SendNext(isCharging);
+        if (chargingBubble != null)
+        {
+            stream.SendNext(chargingBubble.transform.position);
+            stream.SendNext(chargingBubble.transform.localScale);
+        }
+        else
+        {
+            stream.SendNext(Vector3.zero);
+            stream.SendNext(Vector3.zero);
+        }
     }
 
     protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
+        // Charging bubble
+        networkedIsCharging = (bool)stream.ReceiveNext();
+        networkedBubblePosition = (Vector3)stream.ReceiveNext();
+        networkedBubbleScale = (Vector3)stream.ReceiveNext();
 
+        // Compensate for lag
+        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+        networkedBubblePosition += chargingBubble.transform.position * lag;
     }
 
     private void StartCharging()

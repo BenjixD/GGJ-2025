@@ -15,19 +15,19 @@ public class Bubble : NetworkedMonoBehaviour
 
     private Vector3 networkedPosition;
     private Quaternion networkedRotation;
+    private Vector3 networkedScale;
 
     void Awake()
     {
         bubbleCollider = GetComponent<Collider>();
         bubbleCollider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay(0.1f));
+        rb = GetComponent<Rigidbody>();
     }
     
     
     protected override void StartLocal()
     {
-        rb = GetComponent<Rigidbody>();
-
         rb.useGravity = false;
         rb.linearDamping = bubbleDrag;
         rb.mass = bubbleMass;
@@ -58,12 +58,14 @@ public class Bubble : NetworkedMonoBehaviour
     {
         stream.SendNext(rb.transform.position);
         stream.SendNext(rb.transform.rotation);
+        stream.SendNext(transform.localScale);
     }
 
     protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) 
     {
         networkedPosition = (Vector3)stream.ReceiveNext();
         networkedRotation = (Quaternion)stream.ReceiveNext();
+        networkedScale = (Vector3)stream.ReceiveNext();
 
         // Compensate for lag
         float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
