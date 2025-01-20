@@ -16,7 +16,7 @@ public class Bubble : NetworkedMonoBehaviour
     private Vector3 networkedPosition;
     private Quaternion networkedRotation;
 
-    protected override void AwakeLocal()
+    void Awake()
     {
         bubbleCollider = GetComponent<Collider>();
         bubbleCollider.enabled = false;
@@ -50,8 +50,8 @@ public class Bubble : NetworkedMonoBehaviour
 
     protected override void FixedUpdateRemote()
     {
-        rb.position = Vector3.Lerp(transform.position, networkedPosition, Time.deltaTime * 10);
-        rb.rotation = Quaternion.Lerp(transform.rotation, networkedRotation, Time.deltaTime * 10);
+        rb.position = Vector3.Lerp(transform.position, networkedPosition, Time.fixedDeltaTime * 10);
+        rb.rotation = Quaternion.Lerp(transform.rotation, networkedRotation, Time.fixedDeltaTime * 10);
     }
 
     protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) 
