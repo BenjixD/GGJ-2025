@@ -583,7 +583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1791248154453901722, guid: 55f2f4e20a52c45b2a590993943ea151, type: 3}
   connectToNetworkOnStart: 1
-  roomName: Test
+  roomId: Test
 --- !u!4 &723754370
 Transform:
   m_ObjectHideFlags: 0
