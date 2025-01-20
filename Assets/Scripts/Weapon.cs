@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Weapon : MonoBehaviour
 {
@@ -9,18 +10,33 @@ public class Weapon : MonoBehaviour
     public Transform bubbleSpawn;
     public float bubbleVelocity = 2.0f;
     public float bubblePrefabLifetime = 5.0f;
-
-    [Header("Charging")]
-    private float chargeTime = 0f;
     public float maxChargeTime = 2f;
     public float maxBubbleSize = 3f;
-    
+
+    private float chargeTime = 0f;
     private bool isCharging = false;
     private GameObject chargingBubble;
+
+    [Header("Bubble Gauge")]
+    public float maxGauge = 100f;
+    public float gaugeDepletionRate = 20f;
+    public float gaugeRechargeRate = 10f;
+    public float emptyGaugeRechargeRate = 6f;
+    public BubbleGauge bubbleGauge;
+    public Image gaugeFill;
+
+    private bool isEmpty = false;
+    private float currentGauge;
+    private float currentGaugeRechargeRate;
 
     [Header("Camera")]
     public Camera playerCamera;
 
+    void Start()
+    {
+        currentGauge = maxGauge;
+        currentGaugeRechargeRate = gaugeRechargeRate;
+    }
 
     void Update()
     {
@@ -33,12 +49,12 @@ public class Weapon : MonoBehaviour
             StartCharging();
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && !isEmpty)
         {
             Fire();
         }
 
-        if (isCharging && chargingBubble != null)
+        if (isCharging && chargingBubble != null && !isEmpty)
         {
             chargeTime += Time.deltaTime;
             float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
@@ -46,7 +62,37 @@ public class Weapon : MonoBehaviour
 
             // make bubble follow player
             chargingBubble.transform.position = bubbleSpawn.position;
+
+            // deplete gauge
+            currentGauge -= gaugeDepletionRate * Time.deltaTime;
+            if (currentGauge <= 0)
+            {
+                // auto fire if empty
+                currentGauge = 0;
+                isEmpty = true;
+                gaugeFill.color = Color.red;
+
+                // slower recharge rate
+                currentGaugeRechargeRate = emptyGaugeRechargeRate;
+                Fire();
+            }
         }
+        else
+        {
+            // replenish gauge
+            currentGauge += currentGaugeRechargeRate * Time.deltaTime;
+            if (currentGauge > maxGauge)
+            {
+                currentGauge = maxGauge;
+                isEmpty = false;
+                gaugeFill.color = new Color(0.35f, 0.66f, 1.0f);
+
+                // back to normal recharge rate
+                currentGaugeRechargeRate = gaugeRechargeRate;
+            }
+        }
+
+        bubbleGauge.SetGauge(currentGauge);
     }
 
     private void StartCharging()
@@ -88,4 +134,6 @@ public class Weapon : MonoBehaviour
             Destroy(bubble);
         }
     }
+
+
 }
