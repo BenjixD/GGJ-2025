@@ -8,6 +8,8 @@ public class PlayerController : NetworkedMonoBehaviour
     private Rigidbody rb;
     private Vector2 moveInput;
 
+    [Header("Audio")]
+    public AudioListener audioListener;
     [Header("Camera")]
     public Camera playerCamera;
     public float fov = 60f;
@@ -49,10 +51,12 @@ public class PlayerController : NetworkedMonoBehaviour
         crosshairObject = GetComponentInChildren<Image>();
         if(photonView.IsMine)
         {
+            audioListener.enabled = true;
             playerCamera.enabled = true;
         }
         else
         {
+            audioListener.enabled = false;
             playerCamera.enabled = false;
         }
     }
