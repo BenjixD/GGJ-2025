@@ -154,6 +154,7 @@ GameObject:
   - component: {fileID: 3858794587967341392}
   - component: {fileID: 3214304547823124573}
   - component: {fileID: 7475614621742473356}
+  - component: {fileID: 522361679212952244}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Player
@@ -251,7 +252,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7024825974813730215
@@ -307,7 +308,7 @@ MonoBehaviour:
   sprintFOV: 90
   sprintFOVStepTime: 10
   sprintKey: 304
-  jumpPower: 8
+  jumpPower: 5
 --- !u!114 &3214304547823124573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +363,29 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!136 &522361679212952244
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791248154453901722}
+  m_Material: {fileID: 13400000, guid: 5c619fe37600e4f7090c4e6cbf138fc4, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.55
+  m_Height: 1.9
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1 &4026218248490191221
 GameObject:
   m_ObjectHideFlags: 0
