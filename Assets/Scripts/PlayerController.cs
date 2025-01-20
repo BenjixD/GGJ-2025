@@ -47,6 +47,14 @@ public class PlayerController : NetworkedMonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerCamera.fieldOfView = fov;
         crosshairObject = GetComponentInChildren<Image>();
+        if(photonView.IsMine)
+        {
+            playerCamera.enabled = true;
+        }
+        else
+        {
+            playerCamera.enabled = false;
+        }
     }
     protected override void StartLocal()
     {
