@@ -171,7 +171,7 @@ public class Weapon : NetworkedMonoBehaviour
 
     private void StartCharging()
     {
-        Debug.Log("chargin");
+        // Debug.Log("chargin");
         if (chargingBubble != null) return; 
 
         isCharging = true;
@@ -187,7 +187,7 @@ public class Weapon : NetworkedMonoBehaviour
 
     private void Fire()
     {
-        Debug.Log("fire!");
+        // Debug.Log("fire!");
         if (!isCharging || chargingBubble == null) return;
 
         isCharging = false;
