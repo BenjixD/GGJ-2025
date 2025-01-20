@@ -27,9 +27,16 @@ public class Bubble : NetworkedMonoBehaviour
 
     protected override void StartLocal()
     {
+        // Use RB physics for local bubbles
         rb.useGravity = false;
         rb.linearDamping = bubbleDrag;
         rb.mass = bubbleMass;
+    }
+
+    protected override void StartRemote()
+    {
+        // Use kinematic interpolation for remote bubbles
+        rb.isKinematic = true;
     }
 
     protected override void FixedUpdateLocal()
@@ -49,8 +56,8 @@ public class Bubble : NetworkedMonoBehaviour
 
     protected override void FixedUpdateRemote()
     {
-        // rb.position = Vector3.Lerp(transform.position, networkedPosition, Time.fixedDeltaTime * 10);
-        transform.localScale = Vector3.Lerp(transform.localScale, networkedScale, Time.fixedDeltaTime * 10);
+        rb.position = Vector3.Lerp(transform.position, networkedPosition, Time.fixedDeltaTime * 30);
+        transform.localScale = Vector3.Lerp(transform.localScale, networkedScale, Time.fixedDeltaTime * 30);
     }
 
     protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -67,7 +74,6 @@ public class Bubble : NetworkedMonoBehaviour
         // Compensate for lag
         float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
         networkedPosition += rb.linearVelocity * lag;
-        rb.position = networkedPosition;
     }
 
     private void OnCollisionEnter(Collision collision)
