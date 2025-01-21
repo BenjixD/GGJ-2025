@@ -31,6 +31,7 @@ public class Bubble : NetworkedMonoBehaviour
         rb.useGravity = false;
         rb.linearDamping = bubbleDrag;
         rb.mass = bubbleMass;
+        StartCoroutine(DestroyBubbleAfterDelay(gameObject, 10.0f));
     }
 
     protected override void StartRemote()
@@ -76,11 +77,11 @@ public class Bubble : NetworkedMonoBehaviour
         networkedPosition += rb.linearVelocity * lag;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnCollisionEnterLocal(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-             // collision normal
+            // collision normal
             Vector3 collisionNormal = collision.contacts[0].normal;
 
             // Check if the collision is from the top
@@ -96,7 +97,7 @@ public class Bubble : NetworkedMonoBehaviour
             }
 
             // pop bubble after a short delay
-            StartCoroutine(DestroyBubbleAfterDelay());
+            StartCoroutine(DestroyBubbleAfterDelay(gameObject, 0.1f));
         }
     }
 
@@ -106,10 +107,25 @@ public class Bubble : NetworkedMonoBehaviour
         bubbleCollider.enabled = true;
     }
 
-    private IEnumerator DestroyBubbleAfterDelay()
+    private IEnumerator DestroyBubbleAfterDelay(GameObject bubble, float delay)
     {
-        yield return new WaitForSeconds(0.1f);
-        Destroy(gameObject);
+        yield return new WaitForSeconds(delay);
+
+        PhotonView bubblePhotonView = bubble.GetComponent<PhotonView>();
+        if (bubblePhotonView == null)
+        {
+            Debug.LogError("PhotonView not found on bubble!");
+            yield break;
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(bubble);
+        }
+        else
+        {
+            photonView.RPC("DestroyGameObject", RpcTarget.MasterClient, bubble.GetPhotonView().ViewID);
+        }
     }
 
     private IEnumerator EnableColliderAfterDelay(float delay)
