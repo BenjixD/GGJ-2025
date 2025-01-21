@@ -104,24 +104,25 @@ public class Bubble : NetworkedMonoBehaviour
 
     protected void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("trigger entered");
         if (collision.CompareTag("Player"))
         {
             Debug.Log("Collision with Player detected");
             // collision normal
             Vector3 collisionNormal = (collision.transform.position - transform.position).normalized;
             Rigidbody playerRb = collision.GetComponent<Rigidbody>();
+            float scaledBounceForce = bounceForce * transform.localScale.magnitude;
+            Debug.Log("scaledBounceForce: " + scaledBounceForce);
 
             // Check if the collision is from the top
             if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
             {
                 // Apply an upward force to the player
-                playerRb.AddForce(Vector3.up * bounceForce, ForceMode.Impulse);
+                playerRb.AddForce(Vector3.up * scaledBounceForce, ForceMode.Impulse);
             }
             else
             {
                 // Apply a force in the opposite direction of the collision
-                playerRb.AddForce(-collisionNormal * bounceForce, ForceMode.Impulse);
+                playerRb.AddForce(-collisionNormal * scaledBounceForce, ForceMode.Impulse);
             }
 
             // pop bubble after a short delay
