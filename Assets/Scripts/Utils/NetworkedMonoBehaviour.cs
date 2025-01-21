@@ -95,7 +95,7 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
     }
 
     [PunRPC]
-    private void DestroyGameObject(int viewID) {
+    protected void DestroyGameObject(int viewID) {
         PhotonView photonView = PhotonView.Find(viewID);
         if (!PhotonNetwork.IsMasterClient || photonView == null) {
             return;
