@@ -100,6 +100,11 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
         if (!PhotonNetwork.IsMasterClient || photonView == null) {
             return;
         }
+        // Transfer ownership to the MasterClient if it's not already the MasterClient
+        if (photonView.Owner != PhotonNetwork.MasterClient) {
+            photonView.TransferOwnership(PhotonNetwork.MasterClient);
+        }
+        
         PhotonNetwork.Destroy(photonView.gameObject);
     }
 }

@@ -107,10 +107,10 @@ public class Weapon : NetworkedMonoBehaviour
 
     protected override void UpdateRemote()
     {
-        if (networkedIsCharging && chargingBubble == null)
-        {
-            chargingBubble = Instantiate(bubblePrefab, networkedBubblePosition, Quaternion.identity);
-        }
+        // if (networkedIsCharging && chargingBubble == null)
+        // {
+        //     chargingBubble = PhotonNetwork.Instantiate(bubblePrefab.name, networkedBubblePosition, Quaternion.identity);
+        // }
 
         if (chargingBubble != null)
         {
