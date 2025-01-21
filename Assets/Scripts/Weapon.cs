@@ -146,7 +146,7 @@ public class Weapon : NetworkedMonoBehaviour
         if(chargingBubble != null) {
             // Compensate for lag
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
-            networkedBubblePosition += chargingBubble.transform.position * lag;
+            networkedBubblePosition += networkedBubblePosition * lag;
         }
     }
 
@@ -199,20 +199,20 @@ public class Weapon : NetworkedMonoBehaviour
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
         rb.AddForce(direction * bubbleVelocity, ForceMode.VelocityChange);
 
-        StartCoroutine(DestroybubbleAfterTime(firedBubble, bubblePrefabLifetime));
+        // StartCoroutine(DestroyBubbleAfterTime(firedBubble, bubblePrefabLifetime));
 
         // destroy charging bubble
         Destroy(chargingBubble);
         chargingBubble = null;
     }
 
-    private IEnumerator DestroybubbleAfterTime(GameObject bubble, float time)
-    {
-        yield return new WaitForSeconds(time);
-        if (bubble)
-        {
-            Destroy(bubble);
-            bubble = null;
-        }
-    }
+    // private IEnumerator DestroyBubbleAfterTime(GameObject bubble, float time)
+    // {
+    //     yield return new WaitForSeconds(time);
+    //     if (bubble)
+    //     {
+    //         Destroy(bubble);
+    //         bubble = null;
+    //     }
+    // }
 }

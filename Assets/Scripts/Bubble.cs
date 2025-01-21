@@ -22,6 +22,11 @@ public class Bubble : NetworkedMonoBehaviour
         bubbleCollider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay(0.1f));
         rb = GetComponent<Rigidbody>();
+
+        if (photonView.IsMine)
+        {
+            StartCoroutine(DestroyBubbleAfterDelay(gameObject, 10.0f));
+        }
     }
 
 
@@ -72,8 +77,8 @@ public class Bubble : NetworkedMonoBehaviour
         networkedScale = (Vector3)stream.ReceiveNext();
 
         // Compensate for lag
-        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
-        networkedPosition += rb.linearVelocity * lag;
+        // float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+        // networkedPosition += rb.linearVelocity * lag;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -96,7 +101,7 @@ public class Bubble : NetworkedMonoBehaviour
             }
 
             // pop bubble after a short delay
-            StartCoroutine(DestroyBubbleAfterDelay());
+            StartCoroutine(DestroyBubbleAfterDelay(gameObject ,0.1f));
         }
     }
 
@@ -106,10 +111,14 @@ public class Bubble : NetworkedMonoBehaviour
         bubbleCollider.enabled = true;
     }
 
-    private IEnumerator DestroyBubbleAfterDelay()
+    private IEnumerator DestroyBubbleAfterDelay(GameObject bubble, float delay)
     {
-        yield return new WaitForSeconds(0.1f);
-        Destroy(gameObject);
+        yield return new WaitForSeconds(delay);
+        if (bubble != null && (photonView.IsMine || PhotonNetwork.IsMasterClient))
+        {
+            PhotonNetwork.Destroy(bubble); // Use PhotonNetwork.Destroy for networked objects
+            bubble = null;
+        }
     }
 
     private IEnumerator EnableColliderAfterDelay(float delay)
