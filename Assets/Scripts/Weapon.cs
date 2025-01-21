@@ -38,6 +38,15 @@ public class Weapon : NetworkedMonoBehaviour
     private Vector3 networkedBubblePosition;
     private Vector3 networkedBubbleScale;
 
+    protected override void AwakeLocal()
+    {
+        bubbleGauge.gameObject.SetActive(true);
+    }
+
+    protected override void AwakeRemote()
+    {
+        bubbleGauge.gameObject.SetActive(false);
+    }
     protected override void StartLocal()
     {
         currentGauge = maxGauge;
