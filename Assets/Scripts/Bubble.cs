@@ -81,7 +81,7 @@ public class Bubble : NetworkedMonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-             // collision normal
+            // collision normal
             Vector3 collisionNormal = collision.contacts[0].normal;
 
             // Check if the collision is from the top
@@ -97,7 +97,7 @@ public class Bubble : NetworkedMonoBehaviour
             }
 
             // pop bubble after a short delay
-            StartCoroutine(DestroyBubbleAfterDelay(gameObject ,0.1f));
+            StartCoroutine(DestroyBubbleAfterDelay(gameObject, 0.1f));
         }
     }
 
@@ -110,9 +110,20 @@ public class Bubble : NetworkedMonoBehaviour
     private IEnumerator DestroyBubbleAfterDelay(GameObject bubble, float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (PhotonNetwork.IsMasterClient) {
+
+        PhotonView bubblePhotonView = bubble.GetComponent<PhotonView>();
+        if (bubblePhotonView == null)
+        {
+            Debug.LogError("PhotonView not found on bubble!");
+            yield break;
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+        {
             PhotonNetwork.Destroy(bubble);
-        } else {
+        }
+        else
+        {
             photonView.RPC("DestroyGameObject", RpcTarget.MasterClient, bubble.GetPhotonView().ViewID);
         }
     }
