@@ -143,7 +143,8 @@ public class Weapon : NetworkedMonoBehaviour
         networkedBubblePosition = (Vector3)stream.ReceiveNext();
         networkedBubbleScale = (Vector3)stream.ReceiveNext();
 
-        if(chargingBubble != null) {
+        if (chargingBubble != null)
+        {
             // Compensate for lag
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
             networkedBubblePosition += networkedBubblePosition * lag;
@@ -202,7 +203,7 @@ public class Weapon : NetworkedMonoBehaviour
         // StartCoroutine(DestroyBubbleAfterTime(firedBubble, bubblePrefabLifetime));
 
         // destroy charging bubble
-        Destroy(chargingBubble);
+        PhotonNetwork.Destroy(chargingBubble);
         chargingBubble = null;
     }
 
