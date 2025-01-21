@@ -22,11 +22,6 @@ public class Bubble : NetworkedMonoBehaviour
         bubbleCollider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay(0.1f));
         rb = GetComponent<Rigidbody>();
-
-        if (photonView.IsMine)
-        {
-            StartCoroutine(DestroyBubbleAfterDelay(gameObject, 10.0f));
-        }
     }
 
 
@@ -36,6 +31,7 @@ public class Bubble : NetworkedMonoBehaviour
         rb.useGravity = false;
         rb.linearDamping = bubbleDrag;
         rb.mass = bubbleMass;
+        StartCoroutine(DestroyBubbleAfterDelay(gameObject, 10.0f));
     }
 
     protected override void StartRemote()
@@ -77,11 +73,11 @@ public class Bubble : NetworkedMonoBehaviour
         networkedScale = (Vector3)stream.ReceiveNext();
 
         // Compensate for lag
-        // float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
-        // networkedPosition += rb.linearVelocity * lag;
+        float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
+        networkedPosition += rb.linearVelocity * lag;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void OnCollisionEnterLocal(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -114,10 +110,10 @@ public class Bubble : NetworkedMonoBehaviour
     private IEnumerator DestroyBubbleAfterDelay(GameObject bubble, float delay)
     {
         yield return new WaitForSeconds(delay);
-        if (bubble != null && (photonView.IsMine || PhotonNetwork.IsMasterClient))
-        {
-            PhotonNetwork.Destroy(bubble); // Use PhotonNetwork.Destroy for networked objects
-            bubble = null;
+        if (PhotonNetwork.IsMasterClient) {
+            PhotonNetwork.Destroy(bubble);
+        } else {
+            photonView.RPC("DestroyGameObject", RpcTarget.MasterClient, bubble.GetPhotonView().ViewID);
         }
     }
 

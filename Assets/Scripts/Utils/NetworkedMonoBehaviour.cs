@@ -73,4 +73,33 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
             FixedUpdateRemote();
         }
     }
+
+    // Implement game logic for local player
+    protected virtual void OnCollisionEnterLocal(Collision collision) {}
+    // Implement game logic for remote player
+    protected virtual void OnCollisionEnterRemote(Collision collision) {}
+    void OnCollisionEnter(Collision collision) {
+        PhotonView otherPhotonView = collision.gameObject.GetComponent<PhotonView>();
+        // The person's object getting hit is the one that should handle the collision
+        // - playing local, use local collision handler
+        // - other object is not a network object, use local collision handler
+        // - other object is a network object, but it's mine, use local collision handler
+        // - other object is a network object, but it's not mine, use remote collision handler
+        if (!PhotonNetwork.IsConnected ||
+            otherPhotonView == null ||
+            otherPhotonView.IsMine) {
+            OnCollisionEnterLocal(collision);
+        } else {
+            OnCollisionEnterRemote(collision);
+        }
+    }
+
+    [PunRPC]
+    private void DestroyGameObject(int viewID) {
+        PhotonView photonView = PhotonView.Find(viewID);
+        if (!PhotonNetwork.IsMasterClient || photonView == null) {
+            return;
+        }
+        PhotonNetwork.Destroy(photonView.gameObject);
+    }
 }
