@@ -77,12 +77,39 @@ public class Bubble : NetworkedMonoBehaviour
         networkedPosition += rb.linearVelocity * lag;
     }
 
-    protected override void OnCollisionEnterLocal(Collision collision)
+    // protected override void OnCollisionEnterLocal(Collision collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Player"))
+    //     {
+    //         Debug.Log("Collision with Player detected");
+    //         // collision normal
+    //         Vector3 collisionNormal = collision.contacts[0].normal;
+
+    //         // Check if the collision is from the top
+    //         if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
+    //         {
+    //             // Apply an upward force to the player
+    //             rb.AddForce(Vector3.up * bounceForce, ForceMode.Impulse);
+    //         }
+    //         else
+    //         {
+    //             // Apply a force in the opposite direction of the collision
+    //             rb.AddForce(-collisionNormal * bounceForce, ForceMode.Impulse);
+    //         }
+
+    //         // pop bubble after a short delay
+    //         StartCoroutine(DestroyBubbleAfterDelay(gameObject, 0.1f));
+    //     }
+    // }
+
+    protected void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        Debug.Log("trigger entered");
+        if (collision.CompareTag("Player"))
         {
+            Debug.Log("Collision with Player detected");
             // collision normal
-            Vector3 collisionNormal = collision.contacts[0].normal;
+            Vector3 collisionNormal = (collision.transform.position - transform.position).normalized;
 
             // Check if the collision is from the top
             if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
