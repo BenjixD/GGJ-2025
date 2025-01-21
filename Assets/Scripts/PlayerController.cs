@@ -58,6 +58,7 @@ public class PlayerController : NetworkedMonoBehaviour
         {
             audioListener.enabled = false;
             playerCamera.enabled = false;
+            rb.isKinematic = true;
         }
     }
     protected override void StartLocal()
@@ -85,7 +86,7 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void FixedUpdateRemote()
     {
         // Interpolate position and rotation from network
-        // rb.position = Vector3.Lerp(rb.position, networkedPosition, Time.fixedDeltaTime * 10);
+        rb.position = Vector3.Lerp(rb.position, networkedPosition, Time.fixedDeltaTime * 10);
         rb.rotation = Quaternion.Lerp(rb.rotation, networkedRotation, Time.fixedDeltaTime * 10);
     }
 
