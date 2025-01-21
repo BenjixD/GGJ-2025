@@ -117,15 +117,7 @@ public class Bubble : NetworkedMonoBehaviour
             Debug.LogError("PhotonView not found on bubble!");
             yield break;
         }
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.Destroy(bubble);
-        }
-        else
-        {
-            photonView.RPC("DestroyGameObject", RpcTarget.MasterClient, bubble.GetPhotonView().ViewID);
-        }
+        this.photonView.RPC("DestroyGameObject", RpcTarget.All, bubble.GetPhotonView().ViewID);
     }
 
     private IEnumerator EnableColliderAfterDelay(float delay)
