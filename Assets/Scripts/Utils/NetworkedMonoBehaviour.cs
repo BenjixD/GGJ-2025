@@ -111,12 +111,21 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
     }
 
     // Common Methods for NetworkedMonoBehaviour GameObjects
-    protected int MyActorNumber() {
+    public int MyActorNumber() {
         return photonView.Owner.ActorNumber;
     }
 
-    protected Color MyColor() {
+    public Color MyColor() {
         return PlayerColors.COLORS[MyActorNumber() - 1];
+    }
+
+    public string MyName() {
+        string nickName = photonView.Owner.NickName;
+        return string.IsNullOrEmpty(nickName) ? "Player " + MyActorNumber() : nickName;
+    }
+
+    public bool IsMine() {
+        return photonView.IsMine;
     }
 
     [PunRPC]
