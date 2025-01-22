@@ -112,36 +112,13 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
     [PunRPC]
     protected void DestroyGameObject(int viewID)
     {
-        PhotonView photonView = PhotonView.Find(viewID);
-        if (photonView == null)
+        PhotonView pv = PhotonView.Find(viewID);
+        if (pv == null)
         {
-            Debug.LogError("PhotonView not found!");
             return;
         }
-
-        // Transfer ownership to the MasterClient if it's not already the MasterClient
-        if (photonView.Owner != PhotonNetwork.MasterClient)
-        {
-            Debug.Log("transferring ownership");
-            photonView.TransferOwnership(PhotonNetwork.MasterClient);
-        }
-
-        // Ensure the ownership transfer is complete before attempting to destroy the object
-        if (PhotonNetwork.IsMasterClient)
-        {
-            if (photonView.Owner == PhotonNetwork.MasterClient)
-            {
-                Debug.Log("Destroying bubble object");
-                PhotonNetwork.Destroy(photonView.gameObject);
-            }
-            else
-            {
-                Debug.LogError("Failed to transfer ownership to MasterClient before destroying the object.");
-            }
-        }
-        else
-        {
-            Debug.LogError("Only the MasterClient can destroy the object.");
+        if(pv.IsMine) {
+            PhotonNetwork.Destroy(pv.gameObject);
         }
     }
 }
