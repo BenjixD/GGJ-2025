@@ -13,8 +13,16 @@ public class Bubble : NetworkedMonoBehaviour
     public float floatStrength = 1.0f;
     public float bounceForce = 10.0f;
 
+    [Header("Color Blend")]
+    public float blendfactor = 0.75f;
+    public float alpha = 0.7f;
+
     private Vector3 networkedPosition;
     private Vector3 networkedScale;
+
+    private Color BlendColor(Color targetColor, Color original) {
+        return original.BlendWith(targetColor, this.blendfactor, this.alpha);
+    }
 
     void Awake()
     {
@@ -22,6 +30,9 @@ public class Bubble : NetworkedMonoBehaviour
         bubbleCollider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay(0.1f));
         rb = GetComponent<Rigidbody>();
+        // Update bubble color
+        MeshRenderer mr = GetComponent<MeshRenderer>();
+        mr.material.color = BlendColor(mr.material.color, MyColor());
     }
 
 
@@ -77,23 +88,52 @@ public class Bubble : NetworkedMonoBehaviour
         networkedPosition += rb.linearVelocity * lag;
     }
 
-    protected override void OnCollisionEnterLocal(Collision collision)
+    // protected override void OnCollisionEnterLocal(Collision collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Player"))
+    //     {
+    //         Debug.Log("Collision with Player detected");
+    //         // collision normal
+    //         Vector3 collisionNormal = collision.contacts[0].normal;
+
+    //         // Check if the collision is from the top
+    //         if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
+    //         {
+    //             // Apply an upward force to the player
+    //             rb.AddForce(Vector3.up * bounceForce, ForceMode.Impulse);
+    //         }
+    //         else
+    //         {
+    //             // Apply a force in the opposite direction of the collision
+    //             rb.AddForce(-collisionNormal * bounceForce, ForceMode.Impulse);
+    //         }
+
+    //         // pop bubble after a short delay
+    //         StartCoroutine(DestroyBubbleAfterDelay(gameObject, 0.1f));
+    //     }
+    // }
+
+    protected void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
+            Debug.Log("Collision with Player detected");
             // collision normal
-            Vector3 collisionNormal = collision.contacts[0].normal;
+            Vector3 collisionNormal = (collision.transform.position - transform.position).normalized;
+            Rigidbody playerRb = collision.GetComponent<Rigidbody>();
+            float scaledBounceForce = bounceForce * transform.localScale.magnitude;
+            Debug.Log("scaledBounceForce: " + scaledBounceForce);
 
             // Check if the collision is from the top
             if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
             {
                 // Apply an upward force to the player
-                rb.AddForce(Vector3.up * bounceForce, ForceMode.Impulse);
+                playerRb.AddForce(Vector3.up * scaledBounceForce, ForceMode.Impulse);
             }
             else
             {
                 // Apply a force in the opposite direction of the collision
-                rb.AddForce(-collisionNormal * bounceForce, ForceMode.Impulse);
+                playerRb.AddForce(-collisionNormal * scaledBounceForce, ForceMode.Impulse);
             }
 
             // pop bubble after a short delay
@@ -117,15 +157,7 @@ public class Bubble : NetworkedMonoBehaviour
             Debug.LogError("PhotonView not found on bubble!");
             yield break;
         }
-
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.Destroy(bubble);
-        }
-        else
-        {
-            photonView.RPC("DestroyGameObject", RpcTarget.MasterClient, bubble.GetPhotonView().ViewID);
-        }
+        this.photonView.RPC("DestroyGameObject", RpcTarget.All, bubble.GetPhotonView().ViewID);
     }
 
     private IEnumerator EnableColliderAfterDelay(float delay)

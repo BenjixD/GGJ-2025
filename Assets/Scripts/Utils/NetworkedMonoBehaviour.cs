@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using System.Data;
 
 public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
 {
@@ -107,6 +108,15 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
         {
             OnCollisionEnterRemote(collision);
         }
+    }
+
+    // Common Methods for NetworkedMonoBehaviour GameObjects
+    protected int MyActorNumber() {
+        return photonView.Owner.ActorNumber;
+    }
+
+    protected Color MyColor() {
+        return PlayerColors.COLORS[MyActorNumber() - 1];
     }
 
     [PunRPC]
