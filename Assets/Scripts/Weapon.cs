@@ -38,6 +38,15 @@ public class Weapon : NetworkedMonoBehaviour
     private Vector3 networkedBubblePosition;
     private Vector3 networkedBubbleScale;
 
+    protected override void AwakeLocal()
+    {
+        bubbleGauge.gameObject.SetActive(true);
+    }
+
+    protected override void AwakeRemote()
+    {
+        bubbleGauge.gameObject.SetActive(false);
+    }
     protected override void StartLocal()
     {
         currentGauge = maxGauge;
@@ -143,7 +152,8 @@ public class Weapon : NetworkedMonoBehaviour
         networkedBubblePosition = (Vector3)stream.ReceiveNext();
         networkedBubbleScale = (Vector3)stream.ReceiveNext();
 
-        if(chargingBubble != null) {
+        if (chargingBubble != null)
+        {
             // Compensate for lag
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
             networkedBubblePosition += networkedBubblePosition * lag;
@@ -202,7 +212,7 @@ public class Weapon : NetworkedMonoBehaviour
         // StartCoroutine(DestroyBubbleAfterTime(firedBubble, bubblePrefabLifetime));
 
         // destroy charging bubble
-        Destroy(chargingBubble);
+        PhotonNetwork.Destroy(chargingBubble);
         chargingBubble = null;
     }
 
