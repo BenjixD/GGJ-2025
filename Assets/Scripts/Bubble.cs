@@ -13,8 +13,16 @@ public class Bubble : NetworkedMonoBehaviour
     public float floatStrength = 1.0f;
     public float bounceForce = 10.0f;
 
+    [Header("Color Blend")]
+    public float blendfactor = 0.75f;
+    public float alpha = 0.7f;
+
     private Vector3 networkedPosition;
     private Vector3 networkedScale;
+
+    private Color BlendColor(Color targetColor, Color original) {
+        return original.BlendWith(targetColor, this.blendfactor, this.alpha);
+    }
 
     void Awake()
     {
@@ -22,6 +30,9 @@ public class Bubble : NetworkedMonoBehaviour
         bubbleCollider.enabled = false;
         StartCoroutine(EnableColliderAfterDelay(0.1f));
         rb = GetComponent<Rigidbody>();
+        // Update bubble color
+        MeshRenderer mr = GetComponent<MeshRenderer>();
+        mr.material.color = BlendColor(mr.material.color, MyColor());
     }
 
 
