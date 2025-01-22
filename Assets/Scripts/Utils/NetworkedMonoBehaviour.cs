@@ -1,9 +1,16 @@
 using UnityEngine;
 using Photon.Pun;
 using System.Data;
+using Unity.VisualScripting;
 
 public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
 {
+    [Header("Sync Frequency")]
+    public float sendRate = 1f;
+    // Rate accumulates until it reaches 1 or more, then we can send
+    // After sending, reduce the cycle by 1.
+    // (ie. if 100% send rate, send every time, if 50% send rate, send every other time)
+    private float shouldSendCycle = 0f;
 
     // Implement seralizing the view to send data of our player to others
     protected abstract void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info);
@@ -13,7 +20,11 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
     {
         if (stream.IsWriting)
         {
-            WriteSerializeView(stream, info);
+            shouldSendCycle += sendRate;
+            if(shouldSendCycle >= 1f) {
+                WriteSerializeView(stream, info);
+                shouldSendCycle -= 1f;
+            }
         }
         else
         {
