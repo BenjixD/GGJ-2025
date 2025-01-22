@@ -37,6 +37,7 @@ public class PlayerController : NetworkedMonoBehaviour
 
     [Header("Jump")]
     public float jumpPower = 5f;
+    public float gravity = -90.81f;
     private bool isGrounded = false;
 
     // Networked Resources, used to sync player position and rotation
@@ -80,6 +81,7 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void FixedUpdateLocal()
     {
         UpdateMovement();
+        UpdateGravity();
         CheckGround();
     }
 
@@ -163,6 +165,13 @@ public class PlayerController : NetworkedMonoBehaviour
             velocityChange.y = 0;
             velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        }
+    }
+
+    private void UpdateGravity() {
+        if(!isGrounded) {
+            Vector3 downwardsVelocity = new Vector3(0, gravity, 0) * Time.fixedDeltaTime;
+            rb.linearVelocity += downwardsVelocity;
         }
     }
 

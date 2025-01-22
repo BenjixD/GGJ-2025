@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4577a3b1a5854675854adcbedf9e7cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sendRate: 0.5
+  sendRate: 1
   bubbleDrag: 1
   bubbleMass: 0.1
   gravityScale: 0.1
