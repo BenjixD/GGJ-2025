@@ -1063,6 +1063,7 @@ MonoBehaviour:
   bubblePrefabLifetime: 10
   maxChargeTime: 2
   maxBubbleSize: 3
+  minBubbleSize: 0.5
   maxGauge: 100
   gaugeDepletionRate: 20
   gaugeRechargeRate: 10

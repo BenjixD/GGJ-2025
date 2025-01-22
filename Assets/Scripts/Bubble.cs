@@ -20,7 +20,8 @@ public class Bubble : NetworkedMonoBehaviour
     private Vector3 networkedPosition;
     private Vector3 networkedScale;
 
-    private Color BlendColor(Color targetColor, Color original) {
+    private Color BlendColor(Color targetColor, Color original)
+    {
         return original.BlendWith(targetColor, this.blendfactor, this.alpha);
     }
 
@@ -122,18 +123,20 @@ public class Bubble : NetworkedMonoBehaviour
             Vector3 collisionNormal = (collision.transform.position - transform.position).normalized;
             Rigidbody playerRb = collision.GetComponent<Rigidbody>();
             float scaledBounceForce = bounceForce * transform.localScale.magnitude;
+            Debug.Log("bounceForce: " + bounceForce);
             Debug.Log("scaledBounceForce: " + scaledBounceForce);
 
             // Check if the collision is from the top
             if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
             {
+                float upBounceForce = scaledBounceForce / 4; // smaller upwards force
                 // Apply an upward force to the player
-                playerRb.AddForce(Vector3.up * scaledBounceForce, ForceMode.Impulse);
+                playerRb.AddForce(Vector3.up * upBounceForce, ForceMode.Impulse);
             }
             else
             {
                 // Apply a force in the opposite direction of the collision
-                playerRb.AddForce(-collisionNormal * scaledBounceForce, ForceMode.Impulse);
+                playerRb.AddForce(collisionNormal * scaledBounceForce, ForceMode.Impulse);
             }
 
             // pop bubble after a short delay

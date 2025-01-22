@@ -13,14 +13,15 @@ public class Weapon : NetworkedMonoBehaviour
     public float bubblePrefabLifetime = 5.0f;
     public float maxChargeTime = 2f;
     public float maxBubbleSize = 3f;
+    public float minBubbleSize = 0.25f;
 
     private float chargeTime = 0f;
     private bool isCharging = false;
     private GameObject chargingBubble;
 
     [Header("Bubble Gauge")]
-    public float maxGauge = 100f;
-    public float gaugeDepletionRate = 20f;
+    public float maxGauge = 50f;
+    public float gaugeDepletionRate = 40f;
     public float gaugeRechargeRate = 10f;
     public float emptyGaugeRechargeRate = 6f;
     public BubbleGauge bubbleGauge;
@@ -72,7 +73,7 @@ public class Weapon : NetworkedMonoBehaviour
         if (isCharging && chargingBubble != null && !isEmpty)
         {
             chargeTime += Time.deltaTime;
-            float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
+            float scale = Mathf.Lerp(minBubbleSize, maxBubbleSize, chargeTime / maxChargeTime);
             chargingBubble.transform.localScale = new Vector3(scale, scale, scale);
 
             // make bubble follow player
@@ -183,7 +184,7 @@ public class Weapon : NetworkedMonoBehaviour
 
         isCharging = false;
 
-        float scale = Mathf.Lerp(1f, maxBubbleSize, chargeTime / maxChargeTime);
+        float scale = Mathf.Lerp(minBubbleSize, maxBubbleSize, chargeTime / maxChargeTime);
 
         // raycast from the camera to get the direction to shoot
         Camera mainCamera = Camera.main;
