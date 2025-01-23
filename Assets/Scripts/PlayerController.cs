@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Photon.Pun;
+using System.Collections;
 
 public class PlayerController : NetworkedMonoBehaviour
 {
@@ -40,6 +41,13 @@ public class PlayerController : NetworkedMonoBehaviour
     public float gravity = -9.81f;
     private bool isGrounded = false;
 
+    [Header("Player Lives")]
+    public int lives = 3;
+    public Vector3 respawnPosition;
+
+    [Header("Player Damage")]
+    private float damage = 0f; // Damage % like in smash bros
+
     // Networked Resources, used to sync player position and rotation
     // for remote players
     private Vector3 networkedPosition;
@@ -50,7 +58,7 @@ public class PlayerController : NetworkedMonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerCamera.fieldOfView = fov;
         crosshairObject = GetComponentInChildren<Image>();
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             audioListener.enabled = true;
             playerCamera.enabled = true;
@@ -64,7 +72,7 @@ public class PlayerController : NetworkedMonoBehaviour
     }
     protected override void StartLocal()
     {
-        if(lockCursor)
+        if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -76,6 +84,12 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void UpdateLocal()
     {
         UpdateCamera();
+
+        // Change this later to exiting game boundaries or smtn
+        if (transform.position.y < -20)
+        {
+            Respawn();
+        }
     }
 
     protected override void FixedUpdateLocal()
@@ -95,12 +109,14 @@ public class PlayerController : NetworkedMonoBehaviour
     // Player movement is updated using RBs and force locally
     // We sync positions and rotations over the wire
     // Note: Order of stream is important
-    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+    protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
         stream.SendNext(rb.position);
         stream.SendNext(rb.rotation);
     }
 
-    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+    protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
         networkedPosition = (Vector3)stream.ReceiveNext();
         networkedRotation = (Quaternion)stream.ReceiveNext();
 
@@ -110,7 +126,8 @@ public class PlayerController : NetworkedMonoBehaviour
     }
 
 
-    private void UpdateCamera() {
+    private void UpdateCamera()
+    {
         // camera look around
         yaw = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;
         pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
@@ -131,7 +148,8 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
-    private void UpdateMovement() {
+    private void UpdateMovement()
+    {
         Vector3 targetVelocity = new Vector3(moveInput.x, 0, moveInput.y);
         // Sprint
         if (Input.GetKey(sprintKey)) // old input
@@ -169,8 +187,10 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
-    private void UpdateGravity() {
-        if(!isGrounded) {
+    private void UpdateGravity()
+    {
+        if (!isGrounded)
+        {
             Vector3 downwardsVelocity = new Vector3(0, gravity, 0) * Time.fixedDeltaTime;
             rb.linearVelocity += downwardsVelocity;
         }
@@ -206,5 +226,34 @@ public class PlayerController : NetworkedMonoBehaviour
         {
             isGrounded = false;
         }
+    }
+
+    private void Respawn()
+    {
+        lives--;
+        Debug.Log("current lives: " + lives);
+        if (lives > 0)
+        {
+            // reset player
+            transform.position = respawnPosition;
+            rb.linearVelocity = Vector3.zero;
+            damage = 0f;
+        }
+        else
+        {
+            // some sort of game over death??
+            // could maybe add spectator mode
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        this.damage += damage;
+        Debug.Log("Player Damage: " + this.damage);
+    }
+
+    public float GetDamage()
+    {
+        return damage;
     }
 }

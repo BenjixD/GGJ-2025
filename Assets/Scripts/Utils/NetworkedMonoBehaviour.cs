@@ -21,7 +21,8 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
         if (stream.IsWriting)
         {
             shouldSendCycle += sendRate;
-            if(shouldSendCycle >= 1f) {
+            if (shouldSendCycle >= 1f)
+            {
                 WriteSerializeView(stream, info);
                 shouldSendCycle -= 1f;
             }
@@ -121,21 +122,43 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
         }
     }
 
+    protected virtual void OnTriggerEnterLocal(Collider other) { }
+    protected virtual void OnTriggerEnterRemote(Collider other) { }
+
+    void OnTriggerEnter(Collider other)
+    {
+        PhotonView otherPhotonView = other.gameObject.GetComponent<PhotonView>();
+        if (!PhotonNetwork.IsConnected ||
+            otherPhotonView == null ||
+            otherPhotonView.IsMine)
+        {
+            OnTriggerEnterLocal(other);
+        }
+        else
+        {
+            OnTriggerEnterRemote(other);
+        }
+    }
+
     // Common Methods for NetworkedMonoBehaviour GameObjects
-    public int MyActorNumber() {
+    public int MyActorNumber()
+    {
         return photonView.Owner.ActorNumber;
     }
 
-    public Color MyColor() {
+    public Color MyColor()
+    {
         return PlayerColors.COLORS[MyActorNumber() - 1];
     }
 
-    public string MyName() {
+    public string MyName()
+    {
         string nickName = photonView.Owner.NickName;
         return string.IsNullOrEmpty(nickName) ? "Player " + MyActorNumber() : nickName;
     }
 
-    public bool IsMine() {
+    public bool IsMine()
+    {
         return photonView.IsMine;
     }
 
@@ -147,7 +170,8 @@ public abstract class NetworkedMonoBehaviour : MonoBehaviourPun, IPunObservable
         {
             return;
         }
-        if(pv.IsMine) {
+        if (pv.IsMine)
+        {
             PhotonNetwork.Destroy(pv.gameObject);
         }
     }
