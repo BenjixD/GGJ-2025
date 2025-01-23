@@ -77,4 +77,5 @@ crashlytics-build.properties
 /[Aa]ssets/TextMesh\ Pro/*
 
 # Kenney's Assets
-/[Aa]ssets/kenney_platformer-kit
+/[Aa]ssets/kenney_platformer-kit*
+/[Aa]ssets/kenney_blaster-kit*
