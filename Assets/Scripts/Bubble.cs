@@ -114,7 +114,7 @@ public class Bubble : NetworkedMonoBehaviour
     //     }
     // }
 
-    protected void OnTriggerEnter(Collider collision)
+    protected override void OnTriggerEnterLocal(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
