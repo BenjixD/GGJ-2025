@@ -222,8 +222,6 @@ public class Weapon : NetworkedMonoBehaviour
 
         Recoil();
 
-        // StartCoroutine(DestroyBubbleAfterTime(firedBubble, bubblePrefabLifetime));
-
         // destroy charging bubble
         PhotonNetwork.Destroy(chargingBubble);
         chargingBubble = null;
@@ -267,15 +265,4 @@ public class Weapon : NetworkedMonoBehaviour
         // transform.localRotation = originalRotation;
         isRecovering = false;
     }
-
-
-    // private IEnumerator DestroyBubbleAfterTime(GameObject bubble, float time)
-    // {
-    //     yield return new WaitForSeconds(time);
-    //     if (bubble)
-    //     {
-    //         Destroy(bubble);
-    //         bubble = null;
-    //     }
-    // }
 }
