@@ -185,16 +185,22 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
-    private void CheckOutOfBounds() {
+    private void CheckOutOfBounds()
+    {
         Vector3 dirFromOob = transform.position;
         bool isOob = false;
-        if (transform.position.y < -20 || transform.position.y > 30) {
+        if (transform.position.y < -20 || transform.position.y > 30)
+        {
             dirFromOob.y = 0;
             isOob = true;
-        } if(transform.position.x < -40 || transform.position.x > 75) {
+        }
+        if (transform.position.x < -40 || transform.position.x > 75)
+        {
             dirFromOob.x = 0;
             isOob = true;
-        } if(transform.position.z < -30 || transform.position.z > 70) {
+        }
+        if (transform.position.z < -30 || transform.position.z > 70)
+        {
             dirFromOob.z = 0;
             isOob = true;
         }
@@ -275,5 +281,10 @@ public class PlayerController : NetworkedMonoBehaviour
     public float GetDamage()
     {
         return damage;
+    }
+
+    public void Heal(float amount)
+    {
+        damage = Mathf.Max(damage - amount, 0f);
     }
 }
