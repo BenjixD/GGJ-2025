@@ -101,6 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sendRate: 1
   healthAmount: 50
+  bobbingSpeed: 2
+  bobbingHeight: 0.25
+  rotationSpeed: 1
 --- !u!64 &3842125012414532752
 MeshCollider:
   m_ObjectHideFlags: 0

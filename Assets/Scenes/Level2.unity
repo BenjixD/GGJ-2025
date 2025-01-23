@@ -93,8 +93,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 94d63cc54e428446b9f5555503698c1f, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: e3f2f9e445f734cf8a2fbc14f6c4cbc6, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2204,6 +2204,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: block-snow-overhang-large-tall (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 25535db71cf4342cfaff4c6a4440d9a0, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2732,6 +2736,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 8122697104005400202, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -6538903991835684241, guid: 6af85cdf9c67048a6840a6e238e4b5a0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5501,13 +5509,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4159769357622980870, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
+      propertyPath: rotationSpeed
+      value: 90
+      objectReference: {fileID: 0}
     - target: {fileID: 5245992039973318341, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: sceneViewId
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5519,15 +5531,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.70710784
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.70710576
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalRotation.z
@@ -5539,7 +5551,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 6985840749884079589, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -5549,6 +5561,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health
       objectReference: {fileID: 0}
+    - target: {fileID: 7762342681723381599, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 8122697104005400202, guid: 8c5a7ff780c3e4fe7bcee959a5551d5e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -6538903991835684241, guid: 6af85cdf9c67048a6840a6e238e4b5a0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
