@@ -48,6 +48,9 @@ public class PlayerController : NetworkedMonoBehaviour
     [Header("Player Damage")]
     private float damage = 0f; // Damage % like in smash bros
 
+    [Header("Death Objects")]
+    public GameObject ringOutPrefab;
+
     // Networked Resources, used to sync player position and rotation
     // for remote players
     private Vector3 networkedPosition;
@@ -84,12 +87,7 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void UpdateLocal()
     {
         UpdateCamera();
-
-        // Change this later to exiting game boundaries or smtn
-        if (transform.position.y < -20)
-        {
-            Respawn();
-        }
+        CheckOutOfBounds();
     }
 
     protected override void FixedUpdateLocal()
@@ -187,6 +185,27 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
+    private void CheckOutOfBounds() {
+        Vector3 dirFromOob = transform.position;
+        bool isOob = false;
+        if (transform.position.y < -20 || transform.position.y > 30) {
+            dirFromOob.y = 0;
+            isOob = true;
+        } if(transform.position.x < -40 || transform.position.x > 75) {
+            dirFromOob.x = 0;
+            isOob = true;
+        } if(transform.position.z < -30 || transform.position.z > 70) {
+            dirFromOob.z = 0;
+            isOob = true;
+        }
+        if (isOob)
+        {
+            Quaternion rotationToOrigin = Quaternion.LookRotation(dirFromOob - transform.position);
+            PhotonNetwork.Instantiate(ringOutPrefab.name, transform.position, rotationToOrigin);
+            Respawn();
+        }
+    }
+
     private void UpdateGravity()
     {
         if (!isGrounded)
@@ -243,6 +262,7 @@ public class PlayerController : NetworkedMonoBehaviour
         {
             // some sort of game over death??
             // could maybe add spectator mode
+            PhotonNetwork.Destroy(gameObject);  // destroy the player
         }
     }
 
