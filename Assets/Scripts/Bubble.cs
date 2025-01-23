@@ -120,23 +120,33 @@ public class Bubble : NetworkedMonoBehaviour
         {
             Debug.Log("Collision with Player detected");
             // collision normal
-            Vector3 collisionNormal = (collision.transform.position - transform.position).normalized;
             Rigidbody playerRb = collision.GetComponent<Rigidbody>();
+            PlayerController playerController = collision.GetComponent<PlayerController>();
+
+            Vector3 collisionNormal = (collision.transform.position - transform.position).normalized;
+
             float scaledBounceForce = bounceForce * transform.localScale.magnitude;
-            Debug.Log("bounceForce: " + bounceForce);
             Debug.Log("scaledBounceForce: " + scaledBounceForce);
+
+            // Fix: only take damage if it's not your own bubble
+            playerController.TakeDamage(scaledBounceForce);
+
+
+
+            float knockbackForce = scaledBounceForce * (1 + playerController.GetDamage() / 50f);
+
 
             // Check if the collision is from the top
             if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
             {
-                float upBounceForce = scaledBounceForce / 4; // smaller upwards force
+                float upBounceForce = knockbackForce / 4; // smaller upwards force
                 // Apply an upward force to the player
                 playerRb.AddForce(Vector3.up * upBounceForce, ForceMode.Impulse);
             }
             else
             {
                 // Apply a force in the opposite direction of the collision
-                playerRb.AddForce(collisionNormal * scaledBounceForce, ForceMode.Impulse);
+                playerRb.AddForce(collisionNormal * knockbackForce, ForceMode.Impulse);
             }
 
             // pop bubble after a short delay
