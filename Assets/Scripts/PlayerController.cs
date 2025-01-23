@@ -28,7 +28,7 @@ public class PlayerController : NetworkedMonoBehaviour
     public float maxVelocityChange = 10.0f;
 
     [Header("Sprint")]
-    public float sprintSpeed = 10.0f;
+    public float sprintSpeed = 8.0f;
     public float sprintFOV = 90.0f;
     public float sprintFOVStepTime = 10f;
     public KeyCode sprintKey = KeyCode.LeftShift;
@@ -37,7 +37,7 @@ public class PlayerController : NetworkedMonoBehaviour
 
     [Header("Jump")]
     public float jumpPower = 5f;
-    public float gravity = -90.81f;
+    public float gravity = -9.81f;
     private bool isGrounded = false;
 
     // Networked Resources, used to sync player position and rotation
@@ -136,7 +136,8 @@ public class PlayerController : NetworkedMonoBehaviour
         // Sprint
         if (Input.GetKey(sprintKey)) // old input
         {
-            targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
+            float adjustedSprintSpeed = isGrounded ? sprintSpeed : sprintSpeed * 0.6f;
+            targetVelocity = transform.TransformDirection(targetVelocity) * adjustedSprintSpeed;
 
             Vector3 velocity = rb.linearVelocity;
             Vector3 velocityChange = (targetVelocity - velocity);
