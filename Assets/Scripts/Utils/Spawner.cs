@@ -31,7 +31,7 @@ public abstract class Spawner: MonoBehaviourPunCallbacks {
         while (!PhotonNetwork.InRoom) {
             yield return null;
         }
-        Spawn(this.prefab);
+        //Spawn(this.prefab);
     }
     protected abstract void Spawn(GameObject prefab);
 }
