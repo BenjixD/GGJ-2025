@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 3858794587967341392}
   - component: {fileID: 3214304547823124573}
   - component: {fileID: 7475614621742473356}
-  - component: {fileID: 5870593045436725529}
+  - component: {fileID: 226602062771267930}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Player
@@ -370,8 +370,8 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!65 &5870593045436725529
-BoxCollider:
+--- !u!136 &226602062771267930
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -388,8 +388,10 @@ BoxCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.1, y: 2.1, z: 1.1}
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Height: 2.1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3884397526891934015
 GameObject:

@@ -54,6 +54,7 @@ public class PlayerController : NetworkedMonoBehaviour
 
     // Networked Resources, used to sync player position and rotation
     // for remote players
+    private bool isStunned = false;
     private Vector3 networkedPosition;
     private Quaternion networkedRotation;
 
@@ -168,7 +169,7 @@ public class PlayerController : NetworkedMonoBehaviour
     {
         Vector3 targetVelocity = new Vector3(moveInput.x, 0, moveInput.y);
         // Sprint
-        if (Input.GetKey(sprintKey)) // old input
+        if (Input.GetKey(sprintKey) && !isStunned) // old input
         {
             float adjustedSprintSpeed = isGrounded ? sprintSpeed : sprintSpeed * 0.6f;
             targetVelocity = transform.TransformDirection(targetVelocity) * adjustedSprintSpeed;
@@ -186,7 +187,7 @@ public class PlayerController : NetworkedMonoBehaviour
                 isSprinting = true;
             }
         }
-        // Walk
+        // Walk or Recovering from a stun
         else
         {
             isSprinting = false;
@@ -199,7 +200,10 @@ public class PlayerController : NetworkedMonoBehaviour
             velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
             velocityChange.y = 0;
             velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+            // If stunned, take longer to recover your movement. This makes interacting with
+            // bubbles smoother as player input is not prioritized as much.
+            Vector3 force = isStunned ? velocityChange * Time.fixedDeltaTime : velocityChange;
+            rb.AddForce(force, ForceMode.VelocityChange);
         }
     }
 
@@ -300,6 +304,10 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
+    public void StunPlayer(float durationInSeconds)
+    {
+        StartCoroutine(RecoverFromStun(durationInSeconds));
+    }
     public void TakeDamage(float damage)
     {
         this.photonView.RPC("TakeDamageRPC", RpcTarget.All, damage);
@@ -313,6 +321,13 @@ public class PlayerController : NetworkedMonoBehaviour
     public void Heal(float amount)
     {
         damage = Mathf.Max(damage - amount, 0f);
+    }
+
+    private IEnumerator RecoverFromStun(float delay)
+    {
+        this.isStunned = true;
+        yield return new WaitForSeconds(delay); // Wait for the specified time
+        this.isStunned = false;
     }
 
     [PunRPC]
