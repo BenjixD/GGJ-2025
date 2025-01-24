@@ -131,8 +131,6 @@ public class Bubble : NetworkedMonoBehaviour
             // Fix: only take damage if it's not your own bubble
             playerController.TakeDamage(scaledBounceForce);
 
-
-
             float knockbackForce = scaledBounceForce * (1 + playerController.GetDamage() / 50f);
 
 
@@ -181,7 +179,6 @@ public class Bubble : NetworkedMonoBehaviour
             bubbleCollider.enabled = true;
         }
     }
-
 }
 
 

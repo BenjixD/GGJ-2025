@@ -288,8 +288,7 @@ public class PlayerController : NetworkedMonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        this.damage += damage;
-        Debug.Log("Player Damage: " + this.damage);
+        this.photonView.RPC("TakeDamageRPC", RpcTarget.All, damage);
     }
 
     public float GetDamage()
@@ -300,5 +299,11 @@ public class PlayerController : NetworkedMonoBehaviour
     public void Heal(float amount)
     {
         damage = Mathf.Max(damage - amount, 0f);
+    }
+
+    [PunRPC]
+    protected void TakeDamageRPC(float damage)
+    {
+        this.damage += damage;
     }
 }
