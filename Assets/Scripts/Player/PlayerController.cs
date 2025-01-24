@@ -50,6 +50,7 @@ public class PlayerController : NetworkedMonoBehaviour
 
     [Header("Death Objects")]
     public GameObject ringOutPrefab;
+    public LevelBoundsSO levelBoundsSO;
 
     // Networked Resources, used to sync player position and rotation
     // for remote players
@@ -71,6 +72,17 @@ public class PlayerController : NetworkedMonoBehaviour
             audioListener.enabled = false;
             playerCamera.enabled = false;
             rb.isKinematic = true;
+        }
+
+        // Set bounds
+        BoundsManager boundsManager = FindFirstObjectByType<BoundsManager>();
+        if (boundsManager != null)
+        {
+            levelBoundsSO = boundsManager.levelBounds;
+        }
+        else
+        {
+            Debug.LogError("No BoundsManager found in scene");
         }
     }
     protected override void StartLocal()
@@ -195,17 +207,17 @@ public class PlayerController : NetworkedMonoBehaviour
     {
         Vector3 dirFromOob = transform.position;
         bool isOob = false;
-        if (transform.position.y < -20 || transform.position.y > 30)
+        if (transform.position.y < levelBoundsSO.minY || transform.position.y > levelBoundsSO.maxY)
         {
             dirFromOob.y = 0;
             isOob = true;
         }
-        if (transform.position.x < -40 || transform.position.x > 75)
+        if (transform.position.x < levelBoundsSO.minX || transform.position.x > levelBoundsSO.maxX)
         {
             dirFromOob.x = 0;
             isOob = true;
         }
-        if (transform.position.z < -30 || transform.position.z > 70)
+        if (transform.position.z < levelBoundsSO.minZ || transform.position.z > levelBoundsSO.maxZ)
         {
             dirFromOob.z = 0;
             isOob = true;
@@ -278,10 +290,12 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
-    private void RegisterToHUD() {
+    private void RegisterToHUD()
+    {
         // Register player to HUD
         PlayerHUD hud = FindFirstObjectByType<PlayerHUD>();
-        if (hud != null) {
+        if (hud != null)
+        {
             hud.Register(this);
         }
     }
