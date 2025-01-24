@@ -284,12 +284,13 @@ public class PlayerController : NetworkedMonoBehaviour
             // reset player
             transform.position = respawnPosition;
             rb.linearVelocity = Vector3.zero;
-            damage = 0f;
+            this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0); // Reset damage
         }
         else
         {
             // some sort of game over death??
             // could maybe add spectator mode
+            DeregisterFromHUD();
             PhotonNetwork.Destroy(gameObject);  // destroy the player
         }
     }
@@ -304,13 +305,24 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
+    private void DeregisterFromHUD()
+    {
+        // Deregister player to HUD
+        PlayerHUD hud = FindFirstObjectByType<PlayerHUD>();
+        if (hud != null)
+        {
+            hud.Deregister(MyActorNumber());
+        }
+    }
+
     public void StunPlayer(float durationInSeconds)
     {
         StartCoroutine(RecoverFromStun(durationInSeconds));
     }
     public void TakeDamage(float damage)
     {
-        this.photonView.RPC("TakeDamageRPC", RpcTarget.All, damage);
+        float newDamage = this.damage + damage;
+        this.photonView.RPC("TakeDamageRPC", RpcTarget.All, newDamage);
     }
 
     public float GetDamage()
@@ -331,8 +343,8 @@ public class PlayerController : NetworkedMonoBehaviour
     }
 
     [PunRPC]
-    protected void TakeDamageRPC(float damage)
+    protected void TakeDamageRPC(float newDamage)
     {
-        this.damage += damage;
+        this.damage = newDamage;
     }
 }
