@@ -35,72 +35,89 @@ public class LobbyState : SingletonPunCallback<LobbyState>
     private LobbyStateEnum state;
     private List<LobbyUIElement> elements;
     private PlayerListManager playerList;
-    protected override void Awake() {
+    protected override void Awake()
+    {
         base.Awake();
         elements = new List<LobbyUIElement>();
     }
 
-    void Start() {
+    void Start()
+    {
         StateChange(LobbyStateEnum.LOBBY_STATE_LOADING);
         this.status = "Connecting to Servers...";
         PhotonNetwork.ConnectUsingSettings();
     }
 
     // Public Interface
-    public void Register(LobbyUIElement el) {
+    public void Register(LobbyUIElement el)
+    {
         elements.Add(el);
     }
 
-    public void Register(PlayerListManager pl) {
+    public void Register(PlayerListManager pl)
+    {
         playerList = pl;
     }
 
-    public LobbyStateEnum GetState() {
+    public LobbyStateEnum GetState()
+    {
         return this.state;
     }
 
-    public void SetPlayerName(string name) {
+    public void SetPlayerName(string name)
+    {
         PhotonNetwork.NickName = name;
     }
-    public void CreateRoom() {
+    public void CreateRoom()
+    {
         PhotonNetwork.CreateRoom(System.Guid.NewGuid().ToString());
     }
 
-    public void SearchForRoom() {
+    public void SearchForRoom()
+    {
         StateChange(LobbyStateEnum.LOBBY_STATE_SEARCH);
     }
 
-    public void JoinRoom(string roomId) {
+    public void JoinRoom(string roomId)
+    {
         PhotonNetwork.JoinRoom(roomId);
     }
 
-    public string GetStatus() {
+    public string GetStatus()
+    {
         return this.status;
     }
 
-    public string GetRoomId() {
+    public string GetRoomId()
+    {
         return this.roomId;
     }
 
-    public bool IsMasterClient() {
+    public bool IsMasterClient()
+    {
         return PhotonNetwork.IsMasterClient;
     }
 
-    public void StartGame() {
+    public void StartGame()
+    {
         // TODO: Start the game
         Debug.Log("start!");
+        PhotonNetwork.LoadLevel("LevelSelect");
     }
 
     // Private methods
-    private void StateChange(LobbyStateEnum newState) {
+    private void StateChange(LobbyStateEnum newState)
+    {
         this.state = newState;
-        foreach(LobbyUIElement el in elements) {
+        foreach (LobbyUIElement el in elements)
+        {
             el.UpdateOnStateChanged(newState);
         }
     }
 
     // Photon Callbacks //
-    public override void OnConnectedToMaster() {
+    public override void OnConnectedToMaster()
+    {
         this.status = "Connected!";
         PhotonNetwork.JoinLobby();
         StateChange(LobbyStateEnum.LOBBY_STATE_MAIN);
