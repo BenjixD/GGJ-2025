@@ -85,6 +85,11 @@ public class PlayerController : NetworkedMonoBehaviour
         crosshairObject.color = crosshairColor;
     }
 
+    protected override void StartRemote()
+    {
+        RegisterToHUD();
+    }
+
     protected override void UpdateLocal()
     {
         UpdateCamera();
