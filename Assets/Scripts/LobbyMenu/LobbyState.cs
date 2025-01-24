@@ -39,6 +39,8 @@ public class LobbyState : SingletonPunCallback<LobbyState>
     {
         base.Awake();
         elements = new List<LobbyUIElement>();
+
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     void Start()
