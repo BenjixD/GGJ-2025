@@ -101,17 +101,5 @@ public class PlayerSpawner : Spawner
 
     protected override void Spawn(GameObject prefab)
     {
-
-        // PhotonNetwork.Instantiate(prefab.name, Vector3.zero, Quaternion.identity);
-
-        // if (playerSpawnIndices.TryGetValue(actorNumber, out int spawnIndex))
-        // {
-        //     Transform spawnPoint = spawnPoints[spawnIndex];
-        //     PhotonNetwork.Instantiate(prefab.name, spawnPoint.position, spawnPoint.rotation);
-        // }
-        // else
-        // {
-        //     Debug.LogError("No spawn point assigned for actor number " + actorNumber);
-        // }
     }
 }
