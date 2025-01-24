@@ -75,6 +75,7 @@ public class PlayerController : NetworkedMonoBehaviour
     }
     protected override void StartLocal()
     {
+        RegisterToHUD();
         if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -269,6 +270,14 @@ public class PlayerController : NetworkedMonoBehaviour
             // some sort of game over death??
             // could maybe add spectator mode
             PhotonNetwork.Destroy(gameObject);  // destroy the player
+        }
+    }
+
+    private void RegisterToHUD() {
+        // Register player to HUD
+        PlayerHUD hud = FindFirstObjectByType<PlayerHUD>();
+        if (hud != null) {
+            hud.Register(this);
         }
     }
 
