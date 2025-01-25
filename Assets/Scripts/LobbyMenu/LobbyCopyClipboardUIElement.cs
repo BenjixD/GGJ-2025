@@ -17,8 +17,6 @@ public class LobbyCopyClipboardUIElement : LobbyUIElement
                 : "";
 
             GUIUtility.systemCopyBuffer = textToCopyToClipboard;
-
-            Debug.Log($"Copied to clipboard: {textToCopyToClipboard}");
         }
     }
 }

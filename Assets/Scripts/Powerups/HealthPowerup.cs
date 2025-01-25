@@ -42,7 +42,6 @@ public class HealthPowerup : NetworkedMonoBehaviour
         {
             PlayerController playerController = collision.GetComponent<PlayerController>();
             playerController.Heal(healthAmount);
-            Debug.Log("heal: " + healthAmount);
 
             PhotonNetwork.Destroy(gameObject);
 

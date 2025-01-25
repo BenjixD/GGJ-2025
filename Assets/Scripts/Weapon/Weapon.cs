@@ -174,9 +174,12 @@ public class Weapon : NetworkedMonoBehaviour
         }
     }
 
+    public bool IsCharging() {
+        return isCharging;
+    }
+
     private void StartCharging()
     {
-        // Debug.Log("chargin");
         if (chargingBubble != null || isRecovering) return;
 
         isCharging = true;
@@ -192,7 +195,6 @@ public class Weapon : NetworkedMonoBehaviour
 
     private void Fire()
     {
-        // Debug.Log("fire!");
         if (!isCharging || chargingBubble == null || isRecovering) return;
 
         isCharging = false;
@@ -223,52 +225,11 @@ public class Weapon : NetworkedMonoBehaviour
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
         rb.AddForce(direction * bubbleVelocity, ForceMode.VelocityChange);
 
-        Recoil();
-
         // destroy charging bubble
         PhotonNetwork.Destroy(chargingBubble);
         chargingBubble = null;
 
         // TODO: network and have distance affect?
         audioManager.PlaySFX("shoot");
-    }
-
-    private void Recoil()
-    {
-        // NOT WORKING; only has delay between bubbles
-        // set original
-        // originalPosition = transform.localPosition;
-        // originalRotation = transform.localRotation;
-
-        // recoilOffset = playerCamera.transform.forward * recoilIntensity * -1;
-        // recoilRotation = Quaternion.Euler(recoilIntensity * 10, recoilIntensity * 10, 0);
-
-        // apply recoil
-        // transform.localPosition += recoilOffset;
-        // transform.localRotation *= recoilRotation;
-
-        StartCoroutine(HandleRecoilRecovery());
-    }
-
-    private IEnumerator HandleRecoilRecovery()
-    {
-        isRecovering = true;
-        float elapsedTime = 0f;
-
-        // Vector3 startPosition = transform.localPosition;
-        // Quaternion startRotation = transform.localRotation;
-
-        while (elapsedTime < recoilRecoverySpeed)
-        {
-            // transform.localPosition = Vector3.Lerp(startPosition, originalPosition, elapsedTime / recoilRecoverySpeed);
-            // transform.localRotation = Quaternion.Slerp(startRotation, originalRotation, elapsedTime / recoilRecoverySpeed);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        // Ensure the final position and rotation are set correctly
-        // transform.localPosition = originalPosition;
-        // transform.localRotation = originalRotation;
-        isRecovering = false;
     }
 }

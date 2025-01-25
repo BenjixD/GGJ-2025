@@ -30,7 +30,7 @@ public class PlayerController : NetworkedMonoBehaviour
 
     [Header("Sprint")]
     public float sprintSpeed = 8.0f;
-    public float sprintFOV = 90.0f;
+    public float sprintFOV = 95.0f;
     public float sprintFOVStepTime = 10f;
     public KeyCode sprintKey = KeyCode.LeftShift;
 
@@ -162,14 +162,14 @@ public class PlayerController : NetworkedMonoBehaviour
         transform.localEulerAngles = new Vector3(0.0f, yaw, 0.0f);
         playerCamera.transform.localEulerAngles = new Vector3(pitch, 0.0f, 0.0f);
 
-        if (isSprinting)
-        {
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
-        }
-        else
-        {
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, fov, sprintFOVStepTime * Time.deltaTime);
-        }
+        // if (isSprinting)
+        // {
+        //     playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
+        // }
+        // else
+        // {
+        //     playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, fov, sprintFOVStepTime * Time.deltaTime);
+        // }
     }
 
     private void UpdateMovement()
@@ -288,13 +288,12 @@ public class PlayerController : NetworkedMonoBehaviour
     private void Respawn()
     {
         lives--;
-        Debug.Log("current lives: " + lives);
         if (lives > 0)
         {
             // reset player
             transform.position = respawnPosition;
             rb.linearVelocity = Vector3.zero;
-            this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0); // Reset damage
+            this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0f); // Reset damage
         }
         else
         {
@@ -343,6 +342,19 @@ public class PlayerController : NetworkedMonoBehaviour
     public void Heal(float amount)
     {
         damage = Mathf.Max(damage - amount, 0f);
+    }
+
+    public bool IsStunned() {
+        return this.isStunned;
+    }
+
+    public bool IsGrounded()
+    {
+        return isGrounded;
+    }
+
+    public bool IsSprinting() {
+        return isSprinting;
     }
 
     private IEnumerator RecoverFromStun(float delay)
