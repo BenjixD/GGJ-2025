@@ -294,7 +294,7 @@ public class PlayerController : NetworkedMonoBehaviour
             // reset player
             transform.position = respawnPosition;
             rb.linearVelocity = Vector3.zero;
-            this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0); // Reset damage
+            this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0f); // Reset damage
         }
         else
         {
@@ -343,6 +343,10 @@ public class PlayerController : NetworkedMonoBehaviour
     public void Heal(float amount)
     {
         damage = Mathf.Max(damage - amount, 0f);
+    }
+
+    public bool IsStunned() {
+        return this.isStunned;
     }
 
     private IEnumerator RecoverFromStun(float delay)
