@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Photon.Pun;
+using UnityEngine.UIElements;
 
 public class Bubble : NetworkedMonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Bubble : NetworkedMonoBehaviour
     public float gravityScale = 0.1f;
     public float floatStrength = 1.0f;
     public float bounceForce = 10.0f;
+    public float baseKeepAroundTime = 2.5f;
 
     [Header("Color Blend")]
     public float blendfactor = 0.75f;
@@ -43,7 +45,7 @@ public class Bubble : NetworkedMonoBehaviour
         rb.useGravity = false;
         rb.linearDamping = bubbleDrag;
         rb.mass = bubbleMass;
-        StartCoroutine(DestroyBubbleAfterDelay(gameObject, 10.0f));
+        StartCoroutine(DestroyBubbleAfterDelay(gameObject, baseKeepAroundTime + transform.localScale.magnitude * 2));
     }
 
     protected override void StartRemote()
