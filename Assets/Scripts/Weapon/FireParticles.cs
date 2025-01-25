@@ -8,6 +8,10 @@ public class FireParticles : MonoBehaviour
     public float baseSpeed = 0.5f;
     public float maxChargeTime = 2f;
 
+    [Header("Color Blend")]
+    public float blendfactor = 0.75f;
+    public float alpha = 0.7f;
+
     private PlayerController player;
     private Weapon weapon;
     private ParticleSystem particles;
@@ -19,6 +23,19 @@ public class FireParticles : MonoBehaviour
         player = GetComponentInParent<PlayerController>();
         weapon = GetComponentInParent<Weapon>();
         particles = GetComponent<ParticleSystem>();
+        UpdateParticleColors();
+    }
+
+    private Color BlendColor(Color targetColor, Color original)
+    {
+        return original.BlendWith(targetColor, this.blendfactor, this.alpha);
+    }
+
+    void UpdateParticleColors() {
+        ParticleSystemRenderer renderer = particles.GetComponent<ParticleSystemRenderer>();
+        if(renderer != null && renderer.material != null) {
+            renderer.material.color = BlendColor(renderer.material.color, player.MyColor());
+        }
     }
 
     // While we're charging, fizz some bubbles
