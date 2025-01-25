@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2561b9cb813b485497a427db8ce06d4, type: 3}
   m_Name: Level2Bounds
   m_EditorClassIdentifier: 
-  minX: -260
+  minX: -150
   maxX: 260
-  minY: -120
-  maxY: 200
-  minZ: -60
-  maxZ: 500
+  minY: -60
+  maxY: 150
+  minZ: -65
+  maxZ: 300
