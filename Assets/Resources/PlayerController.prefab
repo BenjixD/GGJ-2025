@@ -6035,6 +6035,8 @@ MonoBehaviour:
   baseRate: 15
   baseSpeed: 0.5
   maxChargeTime: 2
+  blendfactor: 0.75
+  alpha: 0.7
 --- !u!1 &6926114699186475394
 GameObject:
   m_ObjectHideFlags: 0

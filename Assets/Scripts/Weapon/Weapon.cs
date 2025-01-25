@@ -174,7 +174,8 @@ public class Weapon : NetworkedMonoBehaviour
         }
     }
 
-    public bool IsCharging() {
+    public bool IsCharging()
+    {
         return isCharging;
     }
 
@@ -229,7 +230,6 @@ public class Weapon : NetworkedMonoBehaviour
         PhotonNetwork.Destroy(chargingBubble);
         chargingBubble = null;
 
-        // TODO: network and have distance affect?
-        audioManager.PlaySFX("shoot");
+        photonView.RPC("PlaySFXRPC", RpcTarget.All, "shoot");
     }
 }
