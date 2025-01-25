@@ -11,9 +11,11 @@ public class HealthPowerup : NetworkedMonoBehaviour
     public float rotationSpeed = 90.09f;
 
     private Vector3 startPosition;
+    private AudioManager audioManager;
 
     protected override void StartLocal()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         startPosition = transform.position;
     }
 
@@ -43,6 +45,8 @@ public class HealthPowerup : NetworkedMonoBehaviour
             Debug.Log("heal: " + healthAmount);
 
             PhotonNetwork.Destroy(gameObject);
+
+            audioManager.PlaySFX("heal");
         }
     }
 }

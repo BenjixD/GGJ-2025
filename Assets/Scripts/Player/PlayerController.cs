@@ -51,6 +51,8 @@ public class PlayerController : NetworkedMonoBehaviour
     public GameObject ringOutPrefab;
     public LevelBoundsSO levelBoundsSO;
 
+    public AudioManager audioManager;
+
     // Networked Resources, used to sync player position and rotation
     // for remote players
     private bool isStunned = false;
@@ -92,6 +94,7 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void StartLocal()
     {
         RegisterToHUD();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -234,6 +237,9 @@ public class PlayerController : NetworkedMonoBehaviour
         {
             Quaternion rotationToOrigin = Quaternion.LookRotation(dirFromOob - transform.position);
             PhotonNetwork.Instantiate(ringOutPrefab.name, transform.position, rotationToOrigin);
+
+            photonView.RPC("PlaySFXRPC", RpcTarget.All, "death");
+
             Respawn();
         }
     }
@@ -350,5 +356,18 @@ public class PlayerController : NetworkedMonoBehaviour
     protected void TakeDamageRPC(float newDamage)
     {
         this.damage = newDamage;
+    }
+
+    [PunRPC]
+    private void PlaySFXRPC(string sfxName)
+    {
+        if (audioManager != null)
+        {
+            audioManager.PlaySFX(sfxName);
+        }
+        else
+        {
+            Debug.LogError("AudioManager not found!");
+        }
     }
 }

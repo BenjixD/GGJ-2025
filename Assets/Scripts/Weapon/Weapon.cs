@@ -49,9 +49,12 @@ public class Weapon : NetworkedMonoBehaviour
     private Vector3 networkedBubblePosition;
     private Vector3 networkedBubbleScale;
 
+    private AudioManager audioManager;
+
     protected override void AwakeLocal()
     {
         bubbleGauge.gameObject.SetActive(true);
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     protected override void AwakeRemote()
@@ -225,6 +228,9 @@ public class Weapon : NetworkedMonoBehaviour
         // destroy charging bubble
         PhotonNetwork.Destroy(chargingBubble);
         chargingBubble = null;
+
+        // TODO: network and have distance affect?
+        audioManager.PlaySFX("shoot");
     }
 
     private void Recoil()
