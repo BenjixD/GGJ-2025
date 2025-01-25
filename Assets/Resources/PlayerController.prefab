@@ -1073,7 +1073,7 @@ Transform:
   m_GameObject: {fileID: 6525328311776145729}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.5}
+  m_LocalPosition: {x: -0.2, y: 0.1, z: 1.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6035,6 +6035,8 @@ MonoBehaviour:
   baseRate: 15
   baseSpeed: 0.5
   maxChargeTime: 2
+  blendfactor: 0.75
+  alpha: 0.7
 --- !u!1 &6926114699186475394
 GameObject:
   m_ObjectHideFlags: 0
@@ -6088,8 +6090,8 @@ MonoBehaviour:
   bubbleVelocity: 15
   bubblePrefabLifetime: 10
   maxChargeTime: 2
-  maxBubbleSize: 3
-  minBubbleSize: 0.5
+  maxBubbleSize: 2
+  minBubbleSize: 0.2
   maxGauge: 100
   gaugeDepletionRate: 20
   gaugeRechargeRate: 10

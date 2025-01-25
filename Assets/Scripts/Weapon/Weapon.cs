@@ -106,8 +106,9 @@ public class Weapon : NetworkedMonoBehaviour
                 gaugeFill.color = Color.red;
 
                 // slower recharge rate
-                currentGaugeRechargeRate = emptyGaugeRechargeRate;
                 Fire();
+                currentGaugeRechargeRate = emptyGaugeRechargeRate;
+                isRecovering = true;
             }
         }
         else
@@ -118,6 +119,7 @@ public class Weapon : NetworkedMonoBehaviour
             {
                 currentGauge = maxGauge;
                 isEmpty = false;
+                isRecovering = false;
                 gaugeFill.color = new Color(0.35f, 0.66f, 1.0f);
 
                 // back to normal recharge rate
@@ -130,15 +132,11 @@ public class Weapon : NetworkedMonoBehaviour
 
     protected override void UpdateRemote()
     {
-        // if (networkedIsCharging && chargingBubble == null)
-        // {
-        //     chargingBubble = PhotonNetwork.Instantiate(bubblePrefab.name, networkedBubblePosition, Quaternion.identity);
-        // }
-
         if (chargingBubble != null)
         {
             // Interpolate position from network
-            chargingBubble.transform.position = Vector3.Lerp(chargingBubble.transform.position, networkedBubblePosition, Time.deltaTime * 10);
+            // chargingBubble.transform.position = Vector3.Lerp(chargingBubble.transform.position, networkedBubblePosition, Time.deltaTime * 10);
+            chargingBubble.transform.position = bubbleSpawn.position;
             chargingBubble.transform.localScale = Vector3.Lerp(chargingBubble.transform.localScale, networkedBubbleScale, Time.deltaTime * 10);
         }
     }
@@ -149,7 +147,7 @@ public class Weapon : NetworkedMonoBehaviour
         stream.SendNext(isCharging);
         if (chargingBubble != null)
         {
-            stream.SendNext(chargingBubble.transform.position);
+            // stream.SendNext(chargingBubble.transform.position); // Don't think we need this. Just follow player
             stream.SendNext(chargingBubble.transform.localScale);
         }
         else
@@ -163,14 +161,15 @@ public class Weapon : NetworkedMonoBehaviour
     {
         // Charging bubble
         networkedIsCharging = (bool)stream.ReceiveNext();
-        networkedBubblePosition = (Vector3)stream.ReceiveNext();
+        // networkedBubblePosition = (Vector3)stream.ReceiveNext();
         networkedBubbleScale = (Vector3)stream.ReceiveNext();
 
         if (chargingBubble != null)
         {
             // Compensate for lag
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
-            networkedBubblePosition += networkedBubblePosition * lag;
+            // networkedBubblePosition += networkedBubblePosition * lag;
+            networkedBubbleScale += networkedBubbleScale * lag;
         }
     }
 
@@ -203,23 +202,30 @@ public class Weapon : NetworkedMonoBehaviour
 
         // raycast from the camera to get the direction to shoot
         Camera mainCamera = Camera.main;
+        Vector3 pointFromCast = mainCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2));
         Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
         RaycastHit hit;
         Vector3 targetPoint;
-
-        if (Physics.Raycast(ray, out hit))
+        float bubbleRadiusOffset = bubblePrefab.GetComponent<SphereCollider>().radius * scale;
+        bool hitSomething = false;
+        if (Physics.Raycast(ray, out hit, bubbleRadiusOffset))
         {
             targetPoint = hit.point;
+            hitSomething = true;
         }
         else
         {
             targetPoint = ray.GetPoint(1000);
         }
 
-        Vector3 direction = (targetPoint - bubbleSpawn.position).normalized;
+        Vector3 direction = (targetPoint - pointFromCast).normalized;
+        Vector3 spawnBubblePosition = bubbleSpawn.position;
+        if(hitSomething) {
+            spawnBubblePosition -= direction * bubbleRadiusOffset;
+        }
 
         // fired bubble
-        GameObject firedBubble = PhotonNetwork.Instantiate(bubblePrefab.name, bubbleSpawn.position, Quaternion.identity);
+        GameObject firedBubble = PhotonNetwork.Instantiate(bubblePrefab.name, spawnBubblePosition, Quaternion.identity);
         firedBubble.transform.localScale = new Vector3(scale, scale, scale);
 
         Rigidbody rb = firedBubble.GetComponent<Rigidbody>();
