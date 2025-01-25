@@ -43,7 +43,6 @@ public class PlayerController : NetworkedMonoBehaviour
 
     [Header("Player Lives")]
     public int lives = 3;
-    public Vector3 respawnPosition;
 
     [Header("Player Damage")]
     private float damage = 0f; // Damage % like in smash bros
@@ -55,6 +54,9 @@ public class PlayerController : NetworkedMonoBehaviour
     // Networked Resources, used to sync player position and rotation
     // for remote players
     private bool isStunned = false;
+    // Kinda hacky, where we are instantiated determines our spawn point
+    // Probably better to have a reference to the PlayerSpawner.
+    private Vector3 respawnPosition;
     private Vector3 networkedPosition;
     private Quaternion networkedRotation;
 
@@ -86,6 +88,7 @@ public class PlayerController : NetworkedMonoBehaviour
             Debug.LogError("No BoundsManager found in scene");
         }
     }
+
     protected override void StartLocal()
     {
         RegisterToHUD();
@@ -96,6 +99,7 @@ public class PlayerController : NetworkedMonoBehaviour
 
         crosshairObject.sprite = crosshairImage;
         crosshairObject.color = crosshairColor;
+        respawnPosition = transform.position;
     }
 
     protected override void StartRemote()
