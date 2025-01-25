@@ -313,9 +313,9 @@ MonoBehaviour:
   jumpPower: 5
   gravity: -12
   lives: 3
-  respawnPosition: {x: 0, y: 0, z: 0}
   ringOutPrefab: {fileID: 4684377557866487421, guid: c938c4b922adb4d32b25f6638b46a6af, type: 3}
   levelBoundsSO: {fileID: 11400000, guid: 7060d69a8bce54ef8a049dc661802bc5, type: 2}
+  audioManager: {fileID: 0}
 --- !u!114 &3214304547823124573
 MonoBehaviour:
   m_ObjectHideFlags: 0
