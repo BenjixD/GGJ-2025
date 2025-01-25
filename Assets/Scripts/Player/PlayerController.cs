@@ -67,6 +67,7 @@ public class PlayerController : NetworkedMonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerCamera.fieldOfView = fov;
         crosshairObject = GetComponentInChildren<Image>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         if (photonView.IsMine)
         {
             audioListener.enabled = true;
@@ -94,7 +95,6 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void StartLocal()
     {
         RegisterToHUD();
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
