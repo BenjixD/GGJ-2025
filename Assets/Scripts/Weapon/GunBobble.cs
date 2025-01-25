@@ -92,7 +92,7 @@ public class GunBobble : MonoBehaviour
 
     void UpdateWalking(float speed) {
         // Increment the timer based on movement speed
-        timer += Time.deltaTime * bobSpeed;
+        timer += Time.deltaTime * bobSpeed * (player.IsSprinting() ? 1.5f : 1f);
 
         // Calculate the bobbing (vertical + horizontal sway)
         float bobOffsetY = Mathf.Sin(timer) * bobAmount; // Smooth vertical motion
