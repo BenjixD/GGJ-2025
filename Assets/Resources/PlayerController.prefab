@@ -959,10 +959,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f42d0b737dfc4aebac71e3826463755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jitterAmount: 0.01
+  jitterSpeed: 20
+  rotationJitterAmount: 1
+  maxChargeTime: 2
+  recoilAmount: 0.05
+  recoilRotationAmount: 5
+  recoilScale: 4
+  recoilSpeed: 15
+  returnSpeed: 7
   bobSpeed: 5
   bobAmount: 0.05
-  sideBobAmount: 0.1
-  tiltAmount: 20
+  swayAmount: 0.025
+  tiltAmount: 2
+  runPositionOffset: {x: -0.2, y: 0, z: 0}
+  runRotationOffset: {x: 0, y: -40, z: 0}
 --- !u!1 &6519715557836070378
 GameObject:
   m_ObjectHideFlags: 0

@@ -118,7 +118,6 @@ public class Bubble : NetworkedMonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Collision with Player detected");
             // collision normal
             Rigidbody playerRb = collision.GetComponent<Rigidbody>();
             PlayerController playerController = collision.GetComponent<PlayerController>();
@@ -126,7 +125,6 @@ public class Bubble : NetworkedMonoBehaviour
             Vector3 collisionNormal = (collision.transform.position - transform.position).normalized;
 
             float scaledBounceForce = bounceForce * transform.localScale.magnitude;
-            Debug.Log("scaledBounceForce: " + scaledBounceForce);
 
             // Fix: only take damage if it's not your own bubble
             playerController.TakeDamage(scaledBounceForce);

@@ -103,7 +103,6 @@ public class LobbyState : SingletonPunCallback<LobbyState>
     public void StartGame()
     {
         // TODO: Start the game
-        Debug.Log("start!");
         PhotonNetwork.LoadLevel("LevelSelect");
     }
 

@@ -90,7 +90,6 @@ public class SpawnManager: MonoBehaviourPunCallbacks {
             int spawnIndex = playerSpawnMapping[player.ActorNumber];
             data[player.ActorNumber-1] = spawnIndex;
         }
-        Debug.Log(string.Join(",", data));
         photonView.RPC("SpawnDataRPC", RpcTarget.All, data);
     }
 

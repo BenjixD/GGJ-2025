@@ -155,7 +155,7 @@ MonoBehaviour:
   bubbleMass: 0.1
   gravityScale: 0.1
   floatStrength: 0.5
-  bounceForce: 15
+  bounceForce: 10
   blendfactor: 0.75
   alpha: 0.7
 --- !u!114 &414375327394830481
