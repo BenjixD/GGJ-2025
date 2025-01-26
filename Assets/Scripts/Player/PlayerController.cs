@@ -123,7 +123,6 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void UpdateLocal()
     {
         UpdateCamera();
-        CheckOutOfBounds();
     }
 
     protected override void FixedUpdateLocal()
@@ -131,6 +130,7 @@ public class PlayerController : NetworkedMonoBehaviour
         UpdateMovement();
         UpdateGravity();
         CheckGround();
+        CheckOutOfBounds();
     }
 
     protected override void FixedUpdateRemote()
@@ -264,7 +264,6 @@ public class PlayerController : NetworkedMonoBehaviour
             PhotonNetwork.Instantiate(ringOutPrefab.name, transform.position, rotationToOrigin);
 
             photonView.RPC("PlaySFXRPC", RpcTarget.All, "death");
-
             Respawn();
         }
     }
