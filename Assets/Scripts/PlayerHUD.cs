@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHUD : MonoBehaviourPunCallbacks {
 
@@ -15,12 +16,19 @@ public class PlayerHUD : MonoBehaviourPunCallbacks {
     public Dictionary<int, PlayerController> players = new Dictionary<int, PlayerController>();
     public Dictionary<int, GameObject> damageIndicators = new Dictionary<int, GameObject>();
 
+    private Color pastelBase = new Color(0xD7 / 255f, 0xF8 / 255f, 0xFF / 255f, 1f); // #D7F8FF
+    private float blendFactor = 0.70f;
+    private float alpha = 0.6f;
+
+    public static int MAX_LIFE_COUNT = 3;
+
     void Start() {
 
     }
 
     void Update() {
         UpdateAllDamageIndicators();
+        UpdateAllLives();
     }
 
     void UpdateAllDamageIndicators() {
@@ -34,6 +42,21 @@ public class PlayerHUD : MonoBehaviourPunCallbacks {
                 text.text = $"<b>{damage.ToString()}%</b>";
             } else {
                 text.text = $"{damage.ToString()}%";
+            }
+        }
+    }
+
+    void UpdateAllLives() {
+        foreach (int actor in players.Keys) {
+            PlayerController player = players[actor];
+            GameObject liveTracker = damageIndicators[actor].transform.Find("LifeTracker").gameObject;
+            int lifeCount = player.GetLives();
+            for(int i = 0; i < MAX_LIFE_COUNT; i++) {
+                if(lifeCount > i) {
+                    liveTracker.transform.GetChild(i).gameObject.SetActive(true);
+                } else {
+                    liveTracker.transform.GetChild(i).gameObject.SetActive(false);
+                }
             }
         }
     }
@@ -64,6 +87,8 @@ public class PlayerHUD : MonoBehaviourPunCallbacks {
         this.players.Add(player.MyActorNumber(), player);
         // Instantiate the indicator
         GameObject indicator = Instantiate(damageIndicatorPrefab, this.transform);
+        // Update color of emblem
+        indicator.transform.Find("Emblem").GetComponent<Image>().color = player.MyColor().BlendWith(this.pastelBase, this.blendFactor, this.alpha);
         this.damageIndicators.Add(player.MyActorNumber(), indicator);
         // Update the new Anchors for all players
         AnchorAll();
@@ -71,7 +96,7 @@ public class PlayerHUD : MonoBehaviourPunCallbacks {
 
     public void Deregister(int actorNumber) {
         this.players.Remove(actorNumber);
-        this.damageIndicators.Remove(actorNumber);
+        // this.damageIndicators.Remove(actorNumber); // probably dont want to remove
         // Update the new Anchors for all players
         AnchorAll();
     }
