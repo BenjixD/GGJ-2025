@@ -27,6 +27,7 @@ public class PlayerController : NetworkedMonoBehaviour
     [Header("Player Movement")]
     public float walkSpeed = 5.0f;
     public float maxVelocityChange = 10.0f;
+    public float minSpeedForSound = 0.1f;
 
     [Header("Sprint")]
     public float sprintSpeed = 8.0f;
@@ -40,6 +41,7 @@ public class PlayerController : NetworkedMonoBehaviour
     public float jumpPower = 5f;
     public float gravity = -9.81f;
     private bool isGrounded = false;
+    private bool wasGrounded = false;
 
     [Header("Player Lives")]
     public int lives = 3;
@@ -56,6 +58,7 @@ public class PlayerController : NetworkedMonoBehaviour
     // Networked Resources, used to sync player position and rotation
     // for remote players
     private bool isStunned = false;
+    private float walkingSoundTimer = 0f;
     // Kinda hacky, where we are instantiated determines our spawn point
     // Probably better to have a reference to the PlayerSpawner.
     private Vector3 respawnPosition;
@@ -212,6 +215,17 @@ public class PlayerController : NetworkedMonoBehaviour
             Vector3 force = isStunned ? velocityChange * Time.fixedDeltaTime : velocityChange;
             rb.AddForce(force, ForceMode.VelocityChange);
         }
+
+        HandleWalkingSound(rb.linearVelocity.magnitude);
+
+        // Check if the player has just landed on the ground
+        if (isGrounded && !wasGrounded)
+        {
+            // Play stomp sound
+            audioManager.PlaySFX("stomp");
+        }
+
+        wasGrounded = isGrounded;
     }
 
     private void CheckOutOfBounds()
@@ -344,7 +358,8 @@ public class PlayerController : NetworkedMonoBehaviour
         damage = Mathf.Max(damage - amount, 0f);
     }
 
-    public bool IsStunned() {
+    public bool IsStunned()
+    {
         return this.isStunned;
     }
 
@@ -353,7 +368,8 @@ public class PlayerController : NetworkedMonoBehaviour
         return isGrounded;
     }
 
-    public bool IsSprinting() {
+    public bool IsSprinting()
+    {
         return isSprinting;
     }
 
@@ -380,6 +396,36 @@ public class PlayerController : NetworkedMonoBehaviour
         else
         {
             Debug.LogError("AudioManager not found!");
+        }
+    }
+
+    private void HandleWalkingSound(float speed)
+    {
+        if (isGrounded && speed > minSpeedForSound)
+        {
+            float delay = Mathf.Lerp(0.8f, 0.3f, speed / sprintSpeed);
+            // Increment timer
+            walkingSoundTimer += Time.deltaTime;
+
+            if (walkingSoundTimer >= delay)
+            {
+                if (!audioManager.walkingSource.isPlaying)
+                {
+                    audioManager.PlaySFX("walk");
+                }
+
+                // Reset timer after playing sound
+                walkingSoundTimer = 0f;
+            }
+        }
+        else
+        {
+            // Stop the sound and reset timer if not moving
+            if (audioManager.walkingSource.isPlaying)
+            {
+                audioManager.walkingSource.Stop();
+            }
+            walkingSoundTimer = 0f;
         }
     }
 }

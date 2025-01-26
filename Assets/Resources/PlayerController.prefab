@@ -306,6 +306,7 @@ MonoBehaviour:
   crosshairColor: {r: 1, g: 1, b: 1, a: 1}
   walkSpeed: 5
   maxVelocityChange: 10
+  minSpeedForSound: 0.1
   sprintSpeed: 10
   sprintFOV: 90
   sprintFOVStepTime: 10
