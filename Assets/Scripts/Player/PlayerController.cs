@@ -59,6 +59,7 @@ public class PlayerController : NetworkedMonoBehaviour
     // for remote players
     private bool isStunned = false;
     private float walkingSoundTimer = 0f;
+    private Weapon weapon;
     // Kinda hacky, where we are instantiated determines our spawn point
     // Probably better to have a reference to the PlayerSpawner.
     private Vector3 respawnPosition;
@@ -71,6 +72,7 @@ public class PlayerController : NetworkedMonoBehaviour
         playerCamera.fieldOfView = fov;
         crosshairObject = GetComponentInChildren<Image>();
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        weapon = GetComponentInChildren<Weapon>();
         if (photonView.IsMine)
         {
             audioListener.enabled = true;
@@ -307,6 +309,7 @@ public class PlayerController : NetworkedMonoBehaviour
             // reset player
             transform.position = respawnPosition;
             rb.linearVelocity = Vector3.zero;
+            weapon.ResetBubbleGauge();
             this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0f); // Reset damage
         }
         else
