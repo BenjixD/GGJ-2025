@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6283670868234479844}
   - component: {fileID: 6774281677880400332}
   - component: {fileID: 414375327394830481}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7167324358054667131}
   serializedVersion: 4
-  m_Mass: 0.0000001
+  m_Mass: 0.1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -137,7 +137,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 2
+  m_CollisionDetection: 3
 --- !u!114 &6774281677880400332
 MonoBehaviour:
   m_ObjectHideFlags: 0
