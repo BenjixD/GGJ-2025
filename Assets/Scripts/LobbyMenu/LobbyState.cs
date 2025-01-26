@@ -75,7 +75,9 @@ public class LobbyState : SingletonPunCallback<LobbyState>
     }
     public void CreateRoom()
     {
-        PhotonNetwork.CreateRoom(System.Guid.NewGuid().ToString());
+        RoomOptions roomOption = new RoomOptions();
+        roomOption.MaxPlayers = 4;
+        PhotonNetwork.CreateRoom(System.Guid.NewGuid().ToString(), roomOption);
     }
 
     public void SearchForRoom()
