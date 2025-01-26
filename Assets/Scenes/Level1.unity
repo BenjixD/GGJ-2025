@@ -8093,6 +8093,7 @@ MonoBehaviour:
   death: {fileID: 8300000, guid: acbcb75601b0082458fda8807f67c813, type: 3}
   walk: {fileID: 8300000, guid: b5574900a0782704cb201eca087b51d9, type: 3}
   stomp: {fileID: 8300000, guid: 46ab22660b7dc9741a7b84cbeaaf2ad7, type: 3}
+  spray: {fileID: 8300000, guid: bc4c3d46fbe9d4f069fb2edc0266444d, type: 3}
 --- !u!4 &1820237643
 Transform:
   m_ObjectHideFlags: 0

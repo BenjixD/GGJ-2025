@@ -9,10 +9,14 @@ public class SprayController : NetworkedMonoBehaviour
     public GameObject sprayDecalPrefab;
     public float sprayDistance = 10f;
     public float sprayCooldown = 0.5f;
+    public AudioManager audioManager;
 
     private bool canSpray = true;
-    private Vector3 networkedPosition;
-    private Quaternion networkedRotation;
+
+    void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     protected override void UpdateLocal()
     {
@@ -28,9 +32,8 @@ public class SprayController : NetworkedMonoBehaviour
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
         if (Physics.Raycast(ray, out RaycastHit hit, sprayDistance))
         {
+            audioManager.PlaySFX("spray");
             CreateSpray(hit.point, hit.normal);
-            networkedPosition = hit.point;
-            networkedRotation = Quaternion.LookRotation(hit.normal);
         }
 
         StartCoroutine(SprayCooldown());

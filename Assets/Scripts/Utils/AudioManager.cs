@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip death;
     public AudioClip walk;
     public AudioClip stomp;
+    public AudioClip spray;
 
     private Dictionary<string, AudioClip> sfxClips;
 
@@ -29,7 +30,8 @@ public class AudioManager : MonoBehaviour
             { "heal", heal },
             { "death", death },
             { "walk", walk },
-            { "stomp", stomp }
+            { "stomp", stomp },
+            { "spray", spray }
         };
 
         // Ensure the audio starts only after the player is instantiated
