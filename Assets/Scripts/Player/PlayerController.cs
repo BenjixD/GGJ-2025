@@ -55,6 +55,8 @@ public class PlayerController : NetworkedMonoBehaviour
 
     public AudioManager audioManager;
 
+    [Header("Spectator Mode")]
+    public GameObject spectatorPrefab;
     // Networked Resources, used to sync player position and rotation
     // for remote players
     private bool isStunned = false;
@@ -314,6 +316,9 @@ public class PlayerController : NetworkedMonoBehaviour
         }
         else
         {
+            // Spectator mode
+            EnterSpectatorMode();
+
             // some sort of game over death??
             // could maybe add spectator mode
             DeregisterFromHUD();
@@ -430,5 +435,10 @@ public class PlayerController : NetworkedMonoBehaviour
             }
             walkingSoundTimer = 0f;
         }
+    }
+
+    private void EnterSpectatorMode()
+    {
+        GameObject spectator = Instantiate(spectatorPrefab, Vector3.zero, Quaternion.identity);
     }
 }
