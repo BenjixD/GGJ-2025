@@ -141,11 +141,12 @@ public class Bubble : NetworkedMonoBehaviour
             }
             float knockbackForce = scaledBounceForce * (1 + playerController.GetDamage() / 50f);
 
-
             // Check if the collision is from the top
             if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
             {
-                float upBounceForce = knockbackForce / 4; // smaller upwards force
+                float upBounceForce = knockbackForce;
+                // Cancel veritcal velocity and apply vertical knockback
+                playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 0, playerRb.linearVelocity.z);
                 // Apply an upward force to the player
                 playerRb.AddForce(Vector3.up * upBounceForce, ForceMode.Impulse);
             }
