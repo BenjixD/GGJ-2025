@@ -1,7 +1,7 @@
-using Photon.Pun;
 using UnityEngine;
+using Photon.Pun;
 
-public class VisibilityByNetworkedPlayer : MonoBehaviour
+public class VisibilityByNetworkedPlayer : MonoBehaviourPunCallbacks
 {
     public bool showForMasterOnly;
     public bool showForNonMasterOnly;
@@ -11,7 +11,8 @@ public class VisibilityByNetworkedPlayer : MonoBehaviour
         iAmMasterClient = PhotonNetwork.IsMasterClient;
         if(showForMasterOnly && !iAmMasterClient) {
             gameObject.SetActive(false);
-        } else if (!showForNonMasterOnly && iAmMasterClient) {
+        }
+        if (showForNonMasterOnly && iAmMasterClient) {
             gameObject.SetActive(false);
         }
     }
