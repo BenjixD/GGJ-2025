@@ -83,7 +83,11 @@ public class Weapon : NetworkedMonoBehaviour
             Fire();
         }
 
-        if (isCharging && chargingBubble != null && !isEmpty)
+        if (isCharging && chargingBubble == null) {
+            // Bubble ran out of charge time
+            isCharging = false;
+        }
+        else if (isCharging && chargingBubble != null && !isEmpty)
         {
             chargeTime += Time.deltaTime;
             float scale = Mathf.Lerp(minBubbleSize, maxBubbleSize, chargeTime / maxChargeTime);
