@@ -159,6 +159,10 @@ public class PlayerController : NetworkedMonoBehaviour
         networkedPosition += rb.linearVelocity * lag;
     }
 
+    void OnDisable()
+    {
+        crosshairObject.enabled = false;
+    }
 
     private void UpdateCamera()
     {
