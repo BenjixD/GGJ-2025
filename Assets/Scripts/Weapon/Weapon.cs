@@ -186,10 +186,13 @@ public class Weapon : NetworkedMonoBehaviour
         chargeTime = 0f;
         chargingBubble = PhotonNetwork.Instantiate(bubblePrefab.name, bubbleSpawn.position, Quaternion.identity);
 
-        Collider chargingBubbleCollider = chargingBubble.GetComponent<Collider>();
-        if (chargingBubbleCollider != null)
+        Collider[] chargingBubbleColliders = chargingBubble.GetComponents<Collider>();
+        if (chargingBubbleColliders.Length > 0)
         {
-            Destroy(chargingBubbleCollider);
+            foreach (Collider chargingBubbleCollider in chargingBubbleColliders)
+            {
+                Destroy(chargingBubbleCollider);
+            }
         }
     }
 
