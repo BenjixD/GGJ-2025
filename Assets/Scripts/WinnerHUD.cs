@@ -38,7 +38,7 @@ public class WinnerHUD : MonoBehaviour
         background.color = backgroundColor;
 
         // Play the winning player
-        string playerName = gameManager.GetWinningPlayerName();
+        string playerName = gameManager.winner;
         string fullText = $"{playerName} Wins!";
         foreach (char c in fullText)
         {

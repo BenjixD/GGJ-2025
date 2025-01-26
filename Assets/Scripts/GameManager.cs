@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager: MonoBehaviourPunCallbacks {
     public GameObject winnerCanvas;
-    public int winnerActorNumber = -1;
+    public string winner;
     private Dictionary<int, PlayerController> players = new Dictionary<int, PlayerController>();
     private HashSet<int> deadPlayers = new HashSet<int>();
 
@@ -39,7 +39,7 @@ public class GameManager: MonoBehaviourPunCallbacks {
     private void checkForWinner() {
         // Check for a winner only if you're the master client and
         // no-one has won yet
-        if(PhotonNetwork.IsMasterClient && winnerActorNumber == -1) {
+        if(PhotonNetwork.IsMasterClient && winner == "") {
             var numberOfPlayers = PhotonNetwork.CurrentRoom.PlayerCount;
             if(players.Count == 1 && deadPlayers.Count >= numberOfPlayers - 1){
                 if(deadPlayers.Count == 0 && dontEndGameOnSinglePlayer) {
@@ -50,8 +50,8 @@ public class GameManager: MonoBehaviourPunCallbacks {
                 // Declare the last player as the winner, network to all players
                 // 1. Disable all player movements and interactions
                 // 2. Show Victory Screen
-                winnerActorNumber = players.Keys.First();
-                this.photonView.RPC("DeclareWinnerRPC", RpcTarget.All, players.Keys.First());
+                this.winner = players[players.Keys.First()].MyName();
+                this.photonView.RPC("DeclareWinnerRPC", RpcTarget.All, this.winner);
             }
         }
     }
@@ -68,23 +68,16 @@ public class GameManager: MonoBehaviourPunCallbacks {
         }
     }
 
-    public string GetWinningPlayerName() {
-        if(winnerActorNumber == -1) {
-            return "";
-        }
-        return players[winnerActorNumber].MyName();
-    }
-
     [PunRPC]
-    public void DeclareWinnerRPC(int actorNumber) {
+    public void DeclareWinnerRPC(string player) {
         // Spawn some canvas that says "Player X Wins!"
-        this.winnerActorNumber = actorNumber;
-        var p = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
-        var s = FindObjectsByType<SpectatorController>(FindObjectsSortMode.None);
-        foreach (var player in p) {
-            player.enabled = false;
+        this.winner = player;
+        var ps = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        var ss = FindObjectsByType<SpectatorController>(FindObjectsSortMode.None);
+        foreach (var p in ps) {
+            p.enabled = false;
         }
-        foreach (var spectator in s) {
+        foreach (var spectator in ss) {
             spectator.enabled = false;
         }
         winnerCanvas.SetActive(true);
