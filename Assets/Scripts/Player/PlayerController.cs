@@ -305,14 +305,14 @@ public class PlayerController : NetworkedMonoBehaviour
 
     private void Respawn()
     {
-        lives--;
+        this.photonView.RPC("LoseLifeRPC", RpcTarget.All);
+        this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0f); // Reset damage
         if (lives > 0)
         {
             // reset player
+            weapon.ResetBubbleGauge();
             transform.position = respawnPosition;
             rb.linearVelocity = Vector3.zero;
-            weapon.ResetBubbleGauge();
-            this.photonView.RPC("TakeDamageRPC", RpcTarget.All, 0f); // Reset damage
         }
         else
         {
@@ -363,7 +363,8 @@ public class PlayerController : NetworkedMonoBehaviour
 
     public void Heal(float amount)
     {
-        damage = Mathf.Max(damage - amount, 0f);
+        float newDamage = Mathf.Max(damage - amount, 0f);
+        this.photonView.RPC("TakeDamageRPC", RpcTarget.All, newDamage);
     }
 
     public bool IsStunned()
@@ -381,6 +382,11 @@ public class PlayerController : NetworkedMonoBehaviour
         return isSprinting;
     }
 
+    public int GetLives()
+    {
+        return lives;
+    }
+
     private IEnumerator RecoverFromStun(float delay)
     {
         this.isStunned = true;
@@ -392,6 +398,12 @@ public class PlayerController : NetworkedMonoBehaviour
     protected void TakeDamageRPC(float newDamage)
     {
         this.damage = newDamage;
+    }
+
+    [PunRPC]
+    protected void LoseLifeRPC()
+    {
+        this.lives--;
     }
 
     [PunRPC]
