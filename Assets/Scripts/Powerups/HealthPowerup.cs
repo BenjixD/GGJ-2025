@@ -19,6 +19,11 @@ public class HealthPowerup : NetworkedMonoBehaviour
         startPosition = transform.position;
     }
 
+    protected override void StartRemote()
+    {
+        startPosition = transform.position;
+    }
+
     protected override void UpdateLocal()
     {
         Bobble();
