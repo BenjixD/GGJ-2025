@@ -128,14 +128,17 @@ public class Bubble : NetworkedMonoBehaviour
 
             float scaledBounceForce = bounceForce * transform.localScale.magnitude;
 
-            // Fix: only take damage if it's not your own bubble
-            playerController.TakeDamage(scaledBounceForce);
+            if(!playerController.photonView.IsMine) {
+                playerController.TakeDamage(scaledBounceForce);
             // s * (1 - e^(-k * x))
             // The idea is that as x -> inf, the stun time approaches s
             //                  as x -> 0, the stun time approaches 0
             // Good for simulating stun time. Tune s,k.
             playerController.StunPlayer(1f * (1f - Mathf.Exp(-0.1f * scaledBounceForce)));
-
+            } else {
+                // Deal less damage to yourself and not stun
+                playerController.TakeDamage(scaledBounceForce * 0.05f);
+            }
             float knockbackForce = scaledBounceForce * (1 + playerController.GetDamage() / 50f);
 
 
