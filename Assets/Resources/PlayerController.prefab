@@ -311,7 +311,7 @@ MonoBehaviour:
   sprintFOV: 90
   sprintFOVStepTime: 10
   sprintKey: 304
-  jumpPower: 5
+  jumpPower: 8
   gravity: -12
   lives: 3
   ringOutPrefab: {fileID: 4684377557866487421, guid: c938c4b922adb4d32b25f6638b46a6af, type: 3}
