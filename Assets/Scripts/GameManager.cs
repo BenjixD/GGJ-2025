@@ -21,10 +21,8 @@ public class GameManager: MonoBehaviourPunCallbacks {
             PhotonNetwork.ConnectUsingSettings();
         }
     }
-
-    void Start() {
-
-    }
+  
+    void Start() {}
 
     void Update() {
         checkForWinner();
