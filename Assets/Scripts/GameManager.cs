@@ -3,6 +3,7 @@ using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager: MonoBehaviourPunCallbacks {
     public GameObject winnerCanvas;
@@ -72,12 +73,24 @@ public class GameManager: MonoBehaviourPunCallbacks {
     public void DeclareWinnerRPC(string player) {
         // Spawn some canvas that says "Player X Wins!"
         this.winner = player;
-        var ps = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
-        var ss = FindObjectsByType<SpectatorController>(FindObjectsSortMode.None);
-        foreach (var p in ps) {
+        var pc = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        var ic = FindObjectsByType<PlayerInput>(FindObjectsSortMode.None);
+        var wc = FindObjectsByType<Weapon>(FindObjectsSortMode.None);
+        var spc = FindObjectsByType<SprayController>(FindObjectsSortMode.None);
+        var sc = FindObjectsByType<SpectatorController>(FindObjectsSortMode.None);
+        foreach (var p in pc) {
             p.enabled = false;
         }
-        foreach (var spectator in ss) {
+        foreach(var i in ic) {
+            i.enabled = false;
+        }
+        foreach(var w in wc) {
+            w.enabled = false;
+        }
+        foreach (var s in spc) {
+            s.enabled = false;
+        }
+        foreach (var spectator in sc) {
             spectator.enabled = false;
         }
         winnerCanvas.SetActive(true);
