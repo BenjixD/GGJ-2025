@@ -102,6 +102,8 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void StartLocal()
     {
         RegisterToHUD();
+        RegisterToGameManager();
+
         if (lockCursor)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -115,6 +117,7 @@ public class PlayerController : NetworkedMonoBehaviour
     protected override void StartRemote()
     {
         RegisterToHUD();
+        RegisterToGameManager();
     }
 
     protected override void UpdateLocal()
@@ -318,12 +321,15 @@ public class PlayerController : NetworkedMonoBehaviour
         {
             // Spectator mode
             EnterSpectatorMode();
-
-            // some sort of game over death??
-            // could maybe add spectator mode
-            DeregisterFromHUD();
             PhotonNetwork.Destroy(gameObject);  // destroy the player
         }
+    }
+
+    void OnDestroy() {
+        // some sort of game over death??
+        // could maybe add spectator mode
+        DeregisterFromHUD();
+        DeregisterFromGameManager();
     }
 
     private void RegisterToHUD()
@@ -336,6 +342,14 @@ public class PlayerController : NetworkedMonoBehaviour
         }
     }
 
+    private void RegisterToGameManager() {
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager != null)
+        {
+            gameManager.Register(this);
+        }
+    }
+
     private void DeregisterFromHUD()
     {
         // Deregister player to HUD
@@ -343,6 +357,14 @@ public class PlayerController : NetworkedMonoBehaviour
         if (hud != null)
         {
             hud.Deregister(MyActorNumber());
+        }
+    }
+
+    private void DeregisterFromGameManager() {
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager != null)
+        {
+            gameManager.Deregister(this);
         }
     }
 

@@ -21,7 +21,7 @@ public abstract class Spawner: MonoBehaviourPunCallbacks {
 
     public override void OnConnectedToMaster()
     {
-        if(PhotonNetwork.InRoom) {
+        if(PhotonNetwork.InRoom || this.roomId == "") {
             return;
         }
         PhotonNetwork.JoinOrCreateRoom(this.roomId, new RoomOptions(), TypedLobby.Default);

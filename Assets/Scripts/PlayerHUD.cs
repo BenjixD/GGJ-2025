@@ -33,30 +33,41 @@ public class PlayerHUD : MonoBehaviourPunCallbacks {
 
     void UpdateAllDamageIndicators() {
         foreach (int actor in players.Keys) {
-            PlayerController player = players[actor];
-            GameObject indicator = damageIndicators[actor];
-            // Get the damage and update the UI elements
-            int damage = Mathf.RoundToInt(player.GetDamage());
-            TMP_Text text = indicator.GetComponentInChildren<TMP_Text>();
-            if (player.IsMine()) {
-                text.text = $"<b>{damage.ToString()}%</b>";
-            } else {
-                text.text = $"{damage.ToString()}%";
-            }
+            UpdateDamageIndicator(actor);
+        }
+    }
+
+    void UpdateDamageIndicator(int actor, bool isDead = false) {
+        PlayerController player = players[actor];
+        GameObject indicator = damageIndicators[actor];
+        // Get the damage and update the UI elements
+        int damage = Mathf.RoundToInt(player.GetDamage());
+        TMP_Text text = indicator.GetComponentInChildren<TMP_Text>();
+        if(isDead) {
+            text.text = "";
+        }
+        else if (player.IsMine()) {
+            text.text = $"<b>{damage.ToString()}%</b>";
+        } else {
+            text.text = $"{damage.ToString()}%";
         }
     }
 
     void UpdateAllLives() {
         foreach (int actor in players.Keys) {
-            PlayerController player = players[actor];
-            GameObject liveTracker = damageIndicators[actor].transform.Find("LifeTracker").gameObject;
-            int lifeCount = player.GetLives();
-            for(int i = 0; i < MAX_LIFE_COUNT; i++) {
-                if(lifeCount > i) {
-                    liveTracker.transform.GetChild(i).gameObject.SetActive(true);
-                } else {
-                    liveTracker.transform.GetChild(i).gameObject.SetActive(false);
-                }
+            UpdateLife(actor);
+        }
+    }
+
+    void UpdateLife(int actor) {
+        PlayerController player = players[actor];
+        GameObject liveTracker = damageIndicators[actor].transform.Find("LifeTracker").gameObject;
+        int lifeCount = player.GetLives();
+        for(int i = 0; i < MAX_LIFE_COUNT; i++) {
+            if(lifeCount > i) {
+                liveTracker.transform.GetChild(i).gameObject.SetActive(true);
+            } else {
+                liveTracker.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
     }
@@ -95,8 +106,9 @@ public class PlayerHUD : MonoBehaviourPunCallbacks {
     }
 
     public void Deregister(int actorNumber) {
+        UpdateLife(actorNumber);
+        UpdateDamageIndicator(actorNumber, true);
         this.players.Remove(actorNumber);
-        // this.damageIndicators.Remove(actorNumber); // probably dont want to remove
         // Update the new Anchors for all players
         AnchorAll();
     }
