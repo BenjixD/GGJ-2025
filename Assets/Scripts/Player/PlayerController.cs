@@ -147,12 +147,15 @@ public class PlayerController : NetworkedMonoBehaviour
     {
         stream.SendNext(rb.position);
         stream.SendNext(rb.rotation);
+        // TODO, not a good way to sync the stun state
+        stream.SendNext(isStunned);
     }
 
     protected override void ReadSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         networkedPosition = (Vector3)stream.ReceiveNext();
         networkedRotation = (Quaternion)stream.ReceiveNext();
+        isStunned = (bool)stream.ReceiveNext();
 
         // Compensate for lag
         float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
