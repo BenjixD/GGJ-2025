@@ -1,9 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager: MonoBehaviourPunCallbacks {
     public GameObject winnerCanvas;
@@ -94,5 +96,12 @@ public class GameManager: MonoBehaviourPunCallbacks {
             spectator.enabled = false;
         }
         winnerCanvas.SetActive(true);
+        StartCoroutine(PrepareBackToLobbyScene());
+    }
+    IEnumerator PrepareBackToLobbyScene() {
+        yield return new WaitForSeconds(15);
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        SceneManager.LoadScene("LobbyScene");
     }
 }
