@@ -41,6 +41,7 @@ public class PlayerController : NetworkedMonoBehaviour
     public float jumpPower = 5f;
     public float gravity = -9.81f;
     private bool isGrounded = false;
+    private bool wasGrounded = false;
 
     [Header("Player Lives")]
     public int lives = 3;
@@ -216,6 +217,15 @@ public class PlayerController : NetworkedMonoBehaviour
         }
 
         HandleWalkingSound(rb.linearVelocity.magnitude);
+
+        // Check if the player has just landed on the ground
+        if (isGrounded && !wasGrounded)
+        {
+            // Play stomp sound
+            audioManager.PlaySFX("stomp");
+        }
+
+        wasGrounded = isGrounded;
     }
 
     private void CheckOutOfBounds()
