@@ -358,7 +358,8 @@ public class PlayerController : NetworkedMonoBehaviour
 
     public void Heal(float amount)
     {
-        damage = Mathf.Max(damage - amount, 0f);
+        float newDamage = Mathf.Max(damage - amount, 0f);
+        this.photonView.RPC("TakeDamageRPC", RpcTarget.All, newDamage);
     }
 
     public bool IsStunned()
