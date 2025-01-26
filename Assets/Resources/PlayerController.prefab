@@ -155,6 +155,7 @@ GameObject:
   - component: {fileID: 3214304547823124573}
   - component: {fileID: 7475614621742473356}
   - component: {fileID: 226602062771267930}
+  - component: {fileID: 5342623835881684742}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Player
@@ -368,6 +369,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 3858794587967341392}
+  - {fileID: 5342623835881684742}
   - {fileID: 2427568349988565462}
   sceneViewId: 0
   InstantiationId: 0
@@ -395,6 +397,23 @@ CapsuleCollider:
   m_Height: 2.1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5342623835881684742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791248154453901722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60afbb837ead74280af7b20fdabbbb16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sendRate: 1
+  playerCamera: {fileID: 2703294815512918033}
+  sprayDecalPrefab: {fileID: 9083575903614074818, guid: 63bd60d0256d54e91a7547027eb15151, type: 3}
+  sprayDistance: 10
+  sprayCooldown: 0.5
 --- !u!1 &3884397526891934015
 GameObject:
   m_ObjectHideFlags: 0
