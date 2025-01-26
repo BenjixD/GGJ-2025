@@ -50,11 +50,13 @@ public class Weapon : NetworkedMonoBehaviour
     private Vector3 networkedBubbleScale;
 
     private AudioManager audioManager;
+    private PlayerController player;
 
     protected override void AwakeLocal()
     {
         bubbleGauge.gameObject.SetActive(true);
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        player = GetComponentInParent<PlayerController>();
     }
 
     protected override void AwakeRemote()
@@ -73,7 +75,7 @@ public class Weapon : NetworkedMonoBehaviour
         transform.position = playerCamera.transform.position + playerCamera.transform.forward * 0.5f + playerCamera.transform.right * 0.5f + playerCamera.transform.up * -0.25f;
         transform.rotation = playerCamera.transform.rotation * Quaternion.Euler(-10, -15, 0);
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !player.IsStunned())
         {
             StartCharging();
         }
