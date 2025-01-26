@@ -21,11 +21,12 @@ public class HealthPowerup : NetworkedMonoBehaviour
 
     protected override void UpdateLocal()
     {
-        float newY = startPosition.y + Mathf.Sin(Time.time * bobbingSpeed) * bobbingHeight;
-        transform.position = new Vector3(startPosition.x, newY, startPosition.z);
+        Bobble();
+    }
 
-        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-
+    protected override void UpdateRemote()
+    {
+        Bobble();
     }
 
     protected override void WriteSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -43,9 +44,16 @@ public class HealthPowerup : NetworkedMonoBehaviour
             PlayerController playerController = collision.GetComponent<PlayerController>();
             playerController.Heal(healthAmount);
 
-            PhotonNetwork.Destroy(gameObject);
-
+            this.photonView.RPC("DestroyGameObject", RpcTarget.All, gameObject.GetPhotonView().ViewID);
             audioManager.PlaySFX("heal");
         }
+    }
+
+    private void Bobble()
+    {
+        float newY = startPosition.y + Mathf.Sin(Time.time * bobbingSpeed) * bobbingHeight;
+        transform.position = new Vector3(startPosition.x, newY, startPosition.z);
+
+        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
     }
 }
