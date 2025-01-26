@@ -21,6 +21,7 @@ public class HealthPowerup : NetworkedMonoBehaviour
 
     protected override void StartRemote()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         startPosition = transform.position;
     }
 
