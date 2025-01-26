@@ -45,6 +45,9 @@ public class LobbyState : SingletonPunCallback<LobbyState>
 
     void Start()
     {
+        // Unlock and make the cursor visible
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         StateChange(LobbyStateEnum.LOBBY_STATE_LOADING);
         this.status = "Connecting to Servers...";
         PhotonNetwork.ConnectUsingSettings();

@@ -82,6 +82,7 @@ public class GameManager: MonoBehaviourPunCallbacks {
         var sc = FindObjectsByType<SpectatorController>(FindObjectsSortMode.None);
         foreach (var p in pc) {
             p.enabled = false;
+            p.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         }
         foreach(var i in ic) {
             i.enabled = false;
@@ -99,7 +100,7 @@ public class GameManager: MonoBehaviourPunCallbacks {
         StartCoroutine(PrepareBackToLobbyScene());
     }
     IEnumerator PrepareBackToLobbyScene() {
-        yield return new WaitForSeconds(15);
+        yield return new WaitForSeconds(10);
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
         SceneManager.LoadScene("LobbyScene");
