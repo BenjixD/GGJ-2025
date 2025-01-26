@@ -128,7 +128,7 @@ public class Bubble : NetworkedMonoBehaviour
 
             float scaledBounceForce = bounceForce * transform.localScale.magnitude;
 
-            if(!playerController.photonView.IsMine) {
+            if(!photonView.IsMine) {
                 playerController.TakeDamage(scaledBounceForce);
             // s * (1 - e^(-k * x))
             // The idea is that as x -> inf, the stun time approaches s
@@ -140,7 +140,6 @@ public class Bubble : NetworkedMonoBehaviour
                 playerController.TakeDamage(scaledBounceForce * 0.05f);
             }
             float knockbackForce = scaledBounceForce * (1 + playerController.GetDamage() / 50f);
-
             // Check if the collision is from the top
             if (Vector3.Dot(collisionNormal, Vector3.up) > 0.5f)
             {
