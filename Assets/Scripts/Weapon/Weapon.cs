@@ -200,6 +200,14 @@ public class Weapon : NetworkedMonoBehaviour
         }
     }
 
+    public void ResetBubbleGauge()
+    {
+        currentGauge = maxGauge;
+        isEmpty = false;
+        isRecovering = false;
+        bubbleGauge.SetGauge(currentGauge);
+    }
+
     private void Fire()
     {
         if (!isCharging || chargingBubble == null || isRecovering) return;
@@ -228,7 +236,8 @@ public class Weapon : NetworkedMonoBehaviour
 
         Vector3 direction = (targetPoint - pointFromCast).normalized;
         Vector3 spawnBubblePosition = bubbleSpawn.position;
-        if(hitSomething) {
+        if (hitSomething)
+        {
             spawnBubblePosition -= direction * bubbleRadiusOffset;
         }
 
