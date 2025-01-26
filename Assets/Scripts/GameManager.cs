@@ -21,7 +21,7 @@ public class GameManager: MonoBehaviourPunCallbacks {
             PhotonNetwork.ConnectUsingSettings();
         }
     }
-  
+
     void Start() {}
 
     void Update() {
@@ -39,7 +39,7 @@ public class GameManager: MonoBehaviourPunCallbacks {
     private void checkForWinner() {
         // Check for a winner only if you're the master client and
         // no-one has won yet
-        if(PhotonNetwork.IsMasterClient && winnerActorNumber != -1) {
+        if(PhotonNetwork.IsMasterClient && winnerActorNumber == -1) {
             var numberOfPlayers = PhotonNetwork.CurrentRoom.PlayerCount;
             if(players.Count == 1 && deadPlayers.Count >= numberOfPlayers - 1){
                 if(deadPlayers.Count == 0 && dontEndGameOnSinglePlayer) {
