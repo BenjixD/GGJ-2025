@@ -15,6 +15,6 @@ MonoBehaviour:
   minX: -60
   maxX: 60
   minY: -30
-  maxY: 60
+  maxY: 80
   minZ: -25
   maxZ: 120
