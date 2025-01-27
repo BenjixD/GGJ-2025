@@ -16,7 +16,16 @@ public class LobbyCopyClipboardUIElement : LobbyUIElement
                 ? fullText.Substring(skipCharacters)
                 : "";
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+            CopyToClipboard(textToCopyToClipboard);
+#else
             GUIUtility.systemCopyBuffer = textToCopyToClipboard;
+#endif
         }
     }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern void CopyToClipboard(string text);
+#endif
 }
